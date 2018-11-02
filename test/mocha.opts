@@ -1,0 +1,13 @@
+--require ts-node/register
+--require source-map-support/register
+--watch-extensions ts,tsx
+--no-cache
+--recursive
+--ui bdd
+--reporter spec
+--colors
+--timeout 6e4
+--require ./test/setup.ts
+--exit
+
+test/**/*.test.ts

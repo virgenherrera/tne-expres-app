@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es6"
+    ],
+    "module": "commonjs",
+    "target": "es6",
+    "moduleResolution": "node",
+    "declaration": true,
+    "rootDir": "./src",
+    "outDir": "dist",
+    "types": [
+      "node",
+      "mocha"
+    ],
+    "noImplicitAny": false,
+    "alwaysStrict": true,
+    "sourceMap": false,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+  },
+  "typeRoots": [
+    "./node_modules/@types"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "public/vendor"
+  ]
+}

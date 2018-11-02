@@ -1,0 +1,11 @@
+{
+  "database": {
+    "mongoose": {
+      "serverAddr": "localhost",
+      "port": "27017",
+      "database": "tests-some",
+      "user": "$keys.database.username",
+      "pass": "$keys.database.password"
+    }
+  }
+}
