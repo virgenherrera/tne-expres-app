@@ -1,26 +1,25 @@
 # @tne/express-app
 A library that provides an interface and some tools to work with express applications through different environments.
 
-
 ---
 <a name="main_menu"></a>
 ## Menu
 ### [ApplicationInterface](#application_interface)
 - [construct()](#app_construct)
 - [destruct()](#app_destruct)
-- [getInstance()](#app_getInstance)
-- [getExpressApp()](#app_getExpressApp)
+- [getInstance()](#app_get_instance)
+- [getExpressApp()](#app_get_express_app)
 ### Base Libraries
 - [Express](#express_js)
 ### [Decorators](#app_decorators)
 - [config](#decorator_config)
 - [endpoint](#decorator_endpoint)
-- [expressRouter](#decorator_expressRouter)
+- [expressRouter](#decorator_express_router)
 - [final](#decorator_final)
 - [prefix](#decorator_prefix)
 ### [Interfaces](#app_interfaces)
 - [IAppConfig](#i_appConfig)
-- [IEndpointConfig](#i_endpointConfig)
+- [IEndpointConfig](#i_endpoint_config)
 
 ---
 <a name="application_interface"></a>
@@ -31,8 +30,8 @@ This Object is an interface that provides us with the methods that will allow yo
 #### Methods
 - [construct()](#app_construct)
 - [destruct()](#app_destruct)
-- [getInstance()](#app_getInstance)
-- [getExpressApp()](#app_getExpressApp)
+- [getInstance()](#app_get_instance)
+- [getExpressApp()](#app_get_express_app)
 
 #### Example usage
 ```
@@ -85,7 +84,7 @@ ApplicationInterface.destruct();
 ```
 
 ---
-<a name="app_getInstance"></a>
+<a name="app_get_instance"></a>
 [Back to Menu](#main_menu)
 ### getInstance()
 This method returns a reference to the singleton instance of class [ExpressCoreApplication](./ExpressCoreApplication.md), if it exists, otherwise it will return `null`.
@@ -98,7 +97,7 @@ const app = ApplicationInterface.getInstance();
 ```
 
 ---
-<a name="app_getExpressApp"></a>
+<a name="app_get_express_app"></a>
 [Back to Menu](#main_menu)
 ### getExpressApp()
 This method returns a reference to the `app` property (which is the `Express.js` application) of the singleton instance of the [ExpressCoreApplication](./ExpressCoreApplication.md) class, if it exists, otherwise it will return `null`.
@@ -196,7 +195,7 @@ export default class ExampleRouter {
 ```
 
 ---
-<a name="decorator_expressRouter"></a>
+<a name="decorator_express_router"></a>
 [Back to Menu](#main_menu)
 ### @expressRouter
 This "class decorator" is used in conjunction with `@endpoint` to transform the methods of a class into usable Route handlers for 'Express.js'.
