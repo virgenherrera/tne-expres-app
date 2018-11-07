@@ -357,8 +357,3 @@ It helps us to transform the decorated method into a useful Route handler for `E
 method | string OR string[] | true | Method, list of methods delimited by commas or an array of valid methods for `Express.js`.
 path | string | true | Route path valid for `Express.js`.
 middleware | RequestHandler[] | false | A valid middleware array that you want to prefix to your `Express.js` Route handler.
-
-#### Example
-```
-	code here!
-```
