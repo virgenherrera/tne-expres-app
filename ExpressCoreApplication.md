@@ -16,4 +16,3 @@ param3 | string | true | Description
 	code here!
 ```
 
-- [prefix](#decorator_prefix)

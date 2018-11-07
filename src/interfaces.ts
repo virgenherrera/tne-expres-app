@@ -28,11 +28,6 @@ export interface IBodyParser {
 	json: IOptionsJson;
 }
 
-export interface IHttpsOptions {
-	privateKey: string;
-	certificate: string;
-}
-
 export interface IAppConfig {
 	appPath: string;
 	appName?: string;
@@ -46,7 +41,6 @@ export interface IAppConfig {
 	faviconPath?: string;
 	routesFolder?: string | string[];
 	errorHandler?: ErrorRequestHandler;
-	httpsOptions?: IHttpsOptions;
 }
 
 export interface IPagingConfig {

@@ -18,7 +18,7 @@ A library that provides an interface and some tools to work with express applica
 - [final](#decorator_final)
 - [prefix](#decorator_prefix)
 ### [Interfaces](#app_interfaces)
-- [IAppConfig](#i_appConfig)
+- [IAppConfig](#i_app_config)
 - [IEndpointConfig](#i_endpoint_config)
 
 ---
@@ -57,7 +57,7 @@ import { ApplicationInterface } from '@tne/express-app';
 ApplicationInterface.construct(__dirname);
 ```
 
-#### [IAppConfig](#i_appConfig) Example
+#### [IAppConfig](#i_app_config) Example
 file: `src/index.ts`
 ```
 import { ApplicationInterface, IAppConfig } from '@tne/express-app';
@@ -153,12 +153,7 @@ export class ExampleClass {
 ### @endpoint
 This "method decorator" is used in conjunction with `@expressRouter` to transform the methods of a class into usable Route handler of `Express.js`.
 
-#### Parameters
-| Param | Type | Required? | Description |
-|-|-|-|-|
-method | string OR string[] | true | Method, list of methods delimited by commas or an array of valid methods for `Express.js`.
-path | string | true | Route path valid for `Express.js`.
-middleware | RequestHandler[] | false | A valid middleware array that you want to prefix to your `Express.js` Route handler.
+Your must provide an object that implements the [IEndpointConfig](#i_endpoint_config) Interface as argument.
 
 #### Example
 ```
@@ -273,14 +268,95 @@ The above code will throw an error when loading the "OtherClass" class.
 <a name="decorator_prefix"></a>
 [Back to Menu](#main_menu)
 ### @prefix
-Description here!
+This "property decorator" prefixes the value of the property of the string or property provided in the argument to the decorated property.
 
 #### Parameters
 | Param | Type | Required? | Description |
 |-|-|-|-|
-param1 | string | true | Description
-param2 | string | true | Description
-param3 | string | true | Description
+The property or `String` that will be prefixed to the property that is being decorated.
+
+#### Constraints
+It only works if all the properties of the class are `static`.
+
+#### Example
+```
+import { config, prefix } from '@tne/express-app';
+
+@config
+export class Routes {
+	static baseUrl = '/';
+	static apiUrl = '/api/v1/';
+
+	@prefix('apiUrl')
+	static users = '/users/';
+
+	@prefix('apiUrl')
+	static user = '/users/:id/';
+
+	@prefix('apiUrl')
+	static users = '/users/';
+
+	@prefix('baseUrl')
+	static view_users = '/users/:id/';
+
+	@prefix('baseUrl')
+	static view_user = '/users/:id/';
+}
+```
+
+#### Example output
+```
+import { Routes } from 'config/routes';
+
+console.log(Routes.user) // -> /api/v1/users/:id/;
+console.log(Routes.view_user) // -> /users/:id/;
+```
+
+---
+<a name="app_interfaces"></a>
+[Back to Menu](#main_menu)
+### Interfaces
+The interfaces that this library provides and that are described here provide help to the developer that will consume this library to build incredible web applications.
+
+#### Constraints
+The interfaces mentioned in this section will be importable only if you are developing your web application with `typescript`.
+
+---
+<a name="i_app_config"></a>
+[Back to Menu](#main_menu)
+### IAppConfig
+Used as an argument for the `ApplicationInterface.construct` method, and used to create an instance of the class [ExpressCoreApplication](./ExpressCoreApplication.md) with arguments different from those used by default.
+
+#### Parameters
+| Param | Type | Required? | Description |
+|-|-|-|-|
+appPath | string | true | The `__dirname` when using from **src/index.ts** file.
+appName | string | false | Your application name
+locals | any | false | any data that you want be available on `req.locals`
+port | number | false | The port for tyour webApplication; **defaults to 3000**
+environment | string | false | When provided your app will use this env instead `NODE_ENV`
+viewsConfig | IViewsSettings | false | `IViewsSettings` to use within tour web application.
+bodyParser | IBodyParser | false | `IBodyParser` to use within tour web application.
+preRouteHooks | RequestHandler[] | false | A valid middleware array that you want to use in your `Express.js` app.
+publicFolder | string | false | Relative path to `Public` folder.
+faviconPath | string | false | Relative path to `favicon`.
+routesFolder | string | string[] | false | Relative path to Routes Folder.
+errorHandler | ErrorRequestHandler | false | Error handler that you want yo use.
+
+---
+<a name="i_endpoint_config"></a>
+[Back to Menu](#main_menu)
+### IEndpointConfig
+Interface Used to describe arguments for the method decorator "@endpoint".
+
+It helps us to transform the decorated method into a useful Route handler for `Express.js`.
+
+#### Parameters
+| Param | Type | Required? | Description |
+|-|-|-|-|
+method | string OR string[] | true | Method, list of methods delimited by commas or an array of valid methods for `Express.js`.
+path | string | true | Route path valid for `Express.js`.
+middleware | RequestHandler[] | false | A valid middleware array that you want to prefix to your `Express.js` Route handler.
 
 #### Example
 ```
