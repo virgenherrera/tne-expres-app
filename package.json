@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/virgenherrera/tne-expres-app"
+    "url": "git+https://github.com/virgenherrera/tne-express-app"
   },
   "keywords": [
     "typescript",
@@ -29,9 +29,9 @@
       "url": "https://github.com/virgenherrera/"
     }
   ],
-  "homepage": "https://github.com/virgenherrera/tne-expres-app#readme",
+  "homepage": "https://github.com/virgenherrera/tne-express-app#readme",
   "bugs": {
-    "url": "https://github.com/virgenherrera/tne-expres-app/issues"
+    "url": "https://github.com/virgenherrera/tne-express-app/issues"
   },
   "scripts": {
     "test": "nyc mocha",

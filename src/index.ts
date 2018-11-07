@@ -2,7 +2,7 @@ import * as express from 'express';
 import { expressRouter, endpoint, config, final, prefix } from './decorators';
 import { ApplicationInterface } from './applicationInterface';
 
-// foundation libs
+// base libraries
 export { express };
 
 // Middleware
