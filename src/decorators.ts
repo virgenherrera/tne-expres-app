@@ -22,7 +22,7 @@ export function expressRouter(constructor: any): any {
 	return router;
 }
 
-export function config<T>(constructor: T): T {
+export function config(constructor) {
 	Object.freeze(constructor);
 	Object.freeze(constructor['prototype']);
 
