@@ -76,3 +76,9 @@ export interface IExpressCoreApplication {
 	readonly appLocals: any;
 	stopServer: () => Promise<IExpressCoreApplication>;
 }
+
+export interface IErrorDto {
+	success: boolean;
+	message: string;
+	errors?: Error[];
+}
