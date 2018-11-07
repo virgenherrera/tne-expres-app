@@ -5,6 +5,7 @@ A library that encapsulates `Express.js` and gives you a base to load easily the
 <a name="main_menu"></a>
 ## Menu
 ### [Installation](#install_instructions)
+### [Creating a web service with `@tne/express-app`](./docs/creating_a_service.md)
 ### [ApplicationInterface](#application_interface)
 - [construct()](#app_construct)
 - [destruct()](#app_destruct)
@@ -28,12 +29,12 @@ A library that encapsulates `Express.js` and gives you a base to load easily the
 ## Installation
 You can install through the node package managers:
 
-### NPM installation
+### NPM
 ```
 $ npm install --save @tne/express-app
 ```
 
-### Yarn Install
+### Yarn
 ```
 $ yarn add @tne/express-app
 ```
