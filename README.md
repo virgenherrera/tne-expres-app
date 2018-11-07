@@ -1,5 +1,5 @@
 # @tne/express-app
-A library that provides an interface and some tools to work with express applications through different environments.
+A library that encapsulates `Express.js` and gives you a base to load easily the resources and services of your web application.
 
 ---
 <a name="main_menu"></a>
