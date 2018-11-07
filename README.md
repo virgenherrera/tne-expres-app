@@ -4,6 +4,7 @@ A library that provides an interface and some tools to work with express applica
 ---
 <a name="main_menu"></a>
 ## Menu
+### [Installation](#install_instructions)
 ### [ApplicationInterface](#application_interface)
 - [construct()](#app_construct)
 - [destruct()](#app_destruct)
@@ -21,6 +22,21 @@ A library that provides an interface and some tools to work with express applica
 - [IAppConfig](#i_app_config)
 - [IEndpointConfig](#i_endpoint_config)
 
+---
+<a name="install_instructions"></a>
+[Back to Menu](#main_menu)
+## Installation
+You can install through the node package managers:
+
+### NPM installation
+```
+$ npm install --save @tne/express-app
+```
+
+### Yarn Install
+```
+$ yarn add @tne/express-app
+```
 ---
 <a name="application_interface"></a>
 [Back to Menu](#main_menu)
@@ -333,7 +349,7 @@ Used as an argument for the `ApplicationInterface.construct` method, and used to
 appPath | string | true | The `__dirname` when using from **src/index.ts** file.
 appName | string | false | Your application name
 locals | any | false | any data that you want be available on `req.locals`
-port | number | false | The port for tyour webApplication; **defaults to 3000**
+port | number | false | The port for tour webApplication; **defaults to 3000**
 environment | string | false | When provided your app will use this env instead `NODE_ENV`
 viewsConfig | IViewsSettings | false | `IViewsSettings` to use within tour web application.
 bodyParser | IBodyParser | false | `IBodyParser` to use within tour web application.
