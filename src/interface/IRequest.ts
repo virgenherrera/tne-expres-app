@@ -1,8 +1,9 @@
 import { Request } from 'express';
+import { TneLogger } from '@tne/nodejs-app';
 import { Authorization } from '../entity/authorization';
 
 export interface IRequest extends Request {
-	logger: any;
+	logger: TneLogger | Console;
 	authorization: Authorization;
 	mapReqToObj(paramString: string | string[]): any;
 }
