@@ -1,23 +1,23 @@
 import { expect, should } from 'chai';
 import * as express from 'express';
-import { AppInterface } from '../../src';
+import { ApplicationInterface } from '../../src';
 import { settings as simpleAppSettings } from '../fixtures/simpleApp/src';
 
 should();
 describe('@tne/express-app Interface test', () => {
 
 	afterEach((done) => {
-		AppInterface.destruct();
+		ApplicationInterface.destruct();
 
 		done();
 	});
 
 	it('should expose the App interface static methods', () => {
-		expect(AppInterface).to.be.a('function');
-		expect(AppInterface.construct).to.be.a('function');
-		expect(AppInterface.destruct).to.be.a('function');
-		expect(AppInterface.getInstance).to.be.a('function');
-		expect(AppInterface.getExpressApp).to.be.a('function');
+		expect(ApplicationInterface).to.be.a('function');
+		expect(ApplicationInterface.construct).to.be.a('function');
+		expect(ApplicationInterface.destruct).to.be.a('function');
+		expect(ApplicationInterface.getInstance).to.be.a('function');
+		expect(ApplicationInterface.getExpressApp).to.be.a('function');
 	});
 
 	describe('construct()', () => {
@@ -25,7 +25,7 @@ describe('@tne/express-app Interface test', () => {
 			let instance;
 
 			try {
-				instance = AppInterface.construct(simpleAppSettings);
+				instance = ApplicationInterface.construct(simpleAppSettings);
 
 				expect(instance).to.have.property('app');
 
@@ -40,8 +40,8 @@ describe('@tne/express-app Interface test', () => {
 			let instance2;
 
 			try {
-				instance1 = AppInterface.construct(simpleAppSettings);
-				instance2 = AppInterface.construct(simpleAppSettings);
+				instance1 = ApplicationInterface.construct(simpleAppSettings);
+				instance2 = ApplicationInterface.construct(simpleAppSettings);
 
 				expect(instance1).to.be.deep.equal(instance2);
 
@@ -54,16 +54,16 @@ describe('@tne/express-app Interface test', () => {
 
 	describe('getInstance() ', () => {
 		it('should return null if construct() method wasn\'t executed before', () => {
-			expect(AppInterface.getInstance()).to.be.equal(null);
+			expect(ApplicationInterface.getInstance()).to.be.equal(null);
 		});
 
 		it('should be deep equal to construct() returned value', (done) => {
 			let instance;
 
 			try {
-				instance = AppInterface.construct(simpleAppSettings);
+				instance = ApplicationInterface.construct(simpleAppSettings);
 
-				expect(instance).to.be.deep.equal(AppInterface.getInstance());
+				expect(instance).to.be.deep.equal(ApplicationInterface.getInstance());
 
 				done();
 			} catch (E) {
@@ -75,10 +75,10 @@ describe('@tne/express-app Interface test', () => {
 	describe('destruct()', () => {
 		it('should be null after destruct() was executed', (done) => {
 			try {
-				AppInterface.construct(simpleAppSettings);
-				AppInterface.destruct();
+				ApplicationInterface.construct(simpleAppSettings);
+				ApplicationInterface.destruct();
 
-				expect(AppInterface.getInstance()).to.be.equal(null);
+				expect(ApplicationInterface.getInstance()).to.be.equal(null);
 
 				done();
 			} catch (E) {
@@ -90,7 +90,7 @@ describe('@tne/express-app Interface test', () => {
 	describe('getExpressApp()', () => {
 		it('should null if construct() wasn\'t ran before', (done) => {
 			try {
-				expect(AppInterface.getExpressApp()).to.to.be.equal(null);
+				expect(ApplicationInterface.getExpressApp()).to.to.be.equal(null);
 
 				done();
 			} catch (E) {
@@ -100,9 +100,9 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should be an instance if Express js if construct() was ran before', (done) => {
 			try {
-				AppInterface.construct(simpleAppSettings);
+				ApplicationInterface.construct(simpleAppSettings);
 
-				expect(AppInterface.getExpressApp()).to.include.all.keys(Object.keys(express()));
+				expect(ApplicationInterface.getExpressApp()).to.include.all.keys(Object.keys(express()));
 
 				done();
 			} catch (E) {

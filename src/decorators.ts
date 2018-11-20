@@ -1,6 +1,6 @@
 import { resolve } from 'url';
 import { Router } from 'express';
-import { IEndpointConfig } from './interfaces';
+import { IEndpointConfig } from './interface';
 
 export function expressRouter(constructor: any): any {
 	const router: Router = Router();

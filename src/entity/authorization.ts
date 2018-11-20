@@ -1,4 +1,4 @@
-import { IAuthorization } from '../interfaces';
+import { IAuthorization } from '../interface';
 
 export class Authorization implements IAuthorization {
 	public token = null;

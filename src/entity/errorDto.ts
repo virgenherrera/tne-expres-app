@@ -1,5 +1,5 @@
-import { errorFormat } from '../lib/errorFormat';
-import { IErrorDto } from '../interfaces';
+import { errorMessageLookup } from '../lib/errorMessageLookup';
+import { IErrorDto } from '../interface';
 
 // Used for validation errors
 export class Error400 implements IErrorDto {
@@ -7,12 +7,13 @@ export class Error400 implements IErrorDto {
 	public message = 'Request could not be understood due to malformed syntax. You SHOULD NOT repeat the request without modifications.';
 	public errors;
 
-	constructor(errors: any) {
-		this.errors = errorFormat(errors);
-	}
-
 	get status(): number {
 		return 400;
+	}
+
+	constructor(Exception: any) {
+		this.message = errorMessageLookup(Exception, this.message);
+		this.errors = Array.isArray(Exception) ? Exception : [Exception];
 	}
 }
 
@@ -22,12 +23,13 @@ export class Error401 implements IErrorDto {
 	public message = 'Unauthorized: Access is denied due to invalid credentials or permissions.';
 	public errors;
 
-	constructor(errors: any) {
-		this.errors = errorFormat(errors);
-	}
-
 	get status(): number {
 		return 401;
+	}
+
+	constructor(Exception: any) {
+		this.message = errorMessageLookup(Exception, this.message);
+		this.errors = Array.isArray(Exception) ? Exception : [Exception];
 	}
 }
 
@@ -37,12 +39,13 @@ export class Error403 implements IErrorDto {
 	public message = 'The request was valid, but the server is refusing action. The user might not have the necessary permissions for a resource, or may need an account of some sort and the request SHOULD NOT be repeated.';
 	public errors;
 
-	constructor(errors: any) {
-		this.errors = errorFormat(errors);
-	}
-
 	get status(): number {
 		return 403;
+	}
+
+	constructor(Exception: any) {
+		this.message = errorMessageLookup(Exception, this.message);
+		this.errors = Array.isArray(Exception) ? Exception : [Exception];
 	}
 }
 
@@ -52,12 +55,13 @@ export class Error404 implements IErrorDto {
 	public message = 'The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.';
 	public errors;
 
-	constructor(errors: any) {
-		this.errors = errorFormat(errors);
-	}
-
 	get status(): number {
 		return 404;
+	}
+
+	constructor(Exception: any) {
+		this.message = errorMessageLookup(Exception, this.message);
+		this.errors = Array.isArray(Exception) ? Exception : [Exception];
 	}
 }
 
@@ -67,12 +71,13 @@ export class Error406 implements IErrorDto {
 	public message = `The requested resource is capable of generating only content not acceptable according to the Content-Type sent in the request.`;
 	public errors;
 
-	constructor(errors: any) {
-		this.errors = errorFormat(errors);
-	}
-
 	get status(): number {
 		return 406;
+	}
+
+	constructor(Exception: any) {
+		this.message = errorMessageLookup(Exception, this.message);
+		this.errors = Array.isArray(Exception) ? Exception : [Exception];
 	}
 }
 
@@ -80,10 +85,14 @@ export class Error406 implements IErrorDto {
 export class Error500 implements IErrorDto {
 	public success = false;
 	public message = 'Internal Server Error';
-
-	constructor() { }
+	public errors;
 
 	get status(): number {
 		return 500;
+	}
+
+	constructor(Exception: any) {
+		this.message = errorMessageLookup(Exception, this.message);
+		this.errors = Array.isArray(Exception) ? Exception : [Exception];
 	}
 }

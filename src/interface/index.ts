@@ -1,5 +1,9 @@
 import { Server, IncomingMessage, ServerResponse } from 'http';
-import { RequestHandler, ErrorRequestHandler, Application, } from 'express';
+import {
+	ErrorRequestHandler,
+	Application,
+	RequestHandler,
+} from 'express';
 
 export interface IViewsSettings {
 	viewsFolder: string;
@@ -66,13 +70,11 @@ export interface IEndpointConfig {
 export interface IExpressCoreApplication {
 	app: Application;
 	server: Server;
-	readonly appPort: number;
 	readonly appLocals: any;
-	stopServer: () => Promise<IExpressCoreApplication>;
+	stopServer(): Promise<IExpressCoreApplication>;
 }
 
-export interface IErrorDto {
-	success: boolean;
-	message: string;
-	errors?: Error[];
-}
+export { IErrorDto } from './IErrorDto';
+export { ISuccessDto } from './ISuccessDto';
+export { IRequest } from './IRequest';
+export { IResponse } from './IResponse';

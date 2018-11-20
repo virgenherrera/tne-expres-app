@@ -1,6 +1,6 @@
 import * as http from 'http';
 import { Application } from 'express';
-import { IAppConfig } from '../interfaces';
+import { IAppConfig } from '../interface';
 import { LogMessages } from '../constant/LogMessages';
 import { Exceptions } from '../constant/Exceptions';
 
@@ -20,7 +20,7 @@ export function startServer(app: Application, getConfig: Function, logger: any =
 	return server;
 }
 
-export function stopServer(server: http.Server, settings: IAppConfig, logger: any = console): Promise<null> {
+export function stopServer(server: http.Server, settings: IAppConfig, logger: any = console): Promise<{ app: null, server: null }> {
 	return new Promise((Res) => {
 		const { port } = settings;
 
@@ -28,8 +28,7 @@ export function stopServer(server: http.Server, settings: IAppConfig, logger: an
 		server.close(() => {
 			logger.info(LogMessages.httpServerHalted.replace(':port', `${port}`));
 
-			server = null;
-			return Res(null);
+			return Res({ app: null, server: null });
 		});
 	});
 }

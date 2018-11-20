@@ -1,12 +1,20 @@
 import { Paging } from './paging';
+import { ISuccessDto } from '../interface';
+import { IGetWithPaging } from '../interface/IGetWithPaging';
 
-export class GET {
+
+
+export class GET implements ISuccessDto {
 	public success = true;
 	public message = 'Resource found';
 	public data: any;
 	public paging: Paging;
 
-	constructor(params: any = {}) {
+	get status(): number {
+		return 200;
+	}
+
+	constructor(params: IGetWithPaging | any = {}) {
 		const {
 			rows = null,
 			uri = null,
@@ -24,10 +32,6 @@ export class GET {
 			this.data = params;
 		}
 	}
-
-	get status(): number {
-		return 200;
-	}
 }
 
 export class PUT {
@@ -35,12 +39,12 @@ export class PUT {
 	public message = 'Resource updated';
 	public data: any;
 
-	constructor(params: any = {}) {
-		this.data = params;
-	}
-
 	get status(): number {
 		return 200;
+	}
+
+	constructor(params: any) {
+		this.data = params;
 	}
 }
 
@@ -49,12 +53,12 @@ export class DELETE {
 	public message = 'Resource deleted';
 	public data: any;
 
-	constructor(params: any = {}) {
-		this.data = params;
-	}
-
 	get status(): number {
 		return 200;
+	}
+
+	constructor(params: any) {
+		this.data = params;
 	}
 }
 
@@ -64,12 +68,12 @@ export class POST {
 	public message = 'Resource created';
 	public data: any;
 
-	constructor(params) {
-		this.data = params;
-	}
-
 	get status(): number {
 		return 201;
+	}
+
+	constructor(params) {
+		this.data = params;
 	}
 }
 

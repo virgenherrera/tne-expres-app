@@ -10,6 +10,7 @@ import { appThrowable } from './appThrowable';
 import { loadRouterPath } from './loadRouterPath';
 import { LogMessages } from '../constant/LogMessages';
 import { mapReqToObjMiddleware } from '../middleware/mapReqToObj';
+import { dtoJsonResponses } from '../middleware/dtoJsonResponses';
 
 export function buildExpressApp(getConfig: Function, logger: any = console): express.Application {
 	let app: express.Application = null;
@@ -96,6 +97,14 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 
 	/* app preRouteHooks (Middleware) */
 	[
+		// make available the app's logger in the req object.
+		(...args) => {
+			const [req, , next] = args;
+
+			req.logger = logger;
+
+			return next();
+		},
 		// express logger
 		morgan('dev', morganConfig),
 		// Enable CORS
@@ -106,6 +115,9 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 		express.json(jsonConfig),
 		// Accept urlEncoded requests
 		express.urlencoded(urlEncodedConfig),
+
+		// Publish success/error helpers
+		dtoJsonResponses,
 
 		// Append mapReqToObj function to request Object
 		mapReqToObjMiddleware,

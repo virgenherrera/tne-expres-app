@@ -1,14 +1,14 @@
 import { Application } from 'express';
-import { ExpressCoreApplication } from './expressCoreApplication';
-import { IAppConfig } from './interfaces';
-import { Exceptions } from './constant/Exceptions';
+import { ExpressApplication } from '../class/expressApplication';
+import { IAppConfig } from '../interface';
+import { Exceptions } from '../constant/Exceptions';
 
-let _instance: ExpressCoreApplication = null;
+let _instance: ExpressApplication = null;
 
 export class ApplicationInterface {
-	public static construct: (args: string | IAppConfig) => ExpressCoreApplication = (settings) => {
+	public static construct: (args: string | IAppConfig) => ExpressApplication = (settings) => {
 		if (_instance === null) {
-			_instance = new ExpressCoreApplication(settings);
+			_instance = new ExpressApplication(settings);
 		} else {
 			_instance.logger.warn(Exceptions.instanceRunning);
 		}
@@ -24,7 +24,7 @@ export class ApplicationInterface {
 		_instance = null;
 	}
 
-	public static getInstance: () => ExpressCoreApplication = () => {
+	public static getInstance: () => ExpressApplication = () => {
 		return _instance;
 	}
 

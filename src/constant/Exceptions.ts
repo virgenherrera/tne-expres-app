@@ -15,4 +15,5 @@ export enum Exceptions {
 	expAppBadFaviconFile = 'The value you provided in the parameter: faviconPath does not lead to a valid file path',
 	srvEAccess = ':bind requires elevated privileges.',
 	srvEAddrInUse = ':bind is already in use.',
+	successRestDtoInvalidResType = 'function:successRestDto | message: Invalid argument provided | resType: ":resType" | allowed values: ["GET", "PUT", "DELETE", "POST", "Http204", "204", "NO_CONTENT"]',
 }

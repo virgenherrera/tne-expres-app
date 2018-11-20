@@ -1,6 +1,6 @@
 {
   "name": "@tne/express-app",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "TNE - wrapper for Express js application",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,12 @@
     "node",
     "express",
     "@tne/nodejs-app",
-    "@tne/logger"
+    "compression",
+    "cookie-parser",
+    "cors",
+    "express",
+    "morgan",
+    "serve-favicon"
   ],
   "author": "Hugo Virgen",
   "contributors": [
@@ -37,7 +42,6 @@
     "test": "nyc mocha",
     "prepublish": "npm run build",
     "build": "npm run cleanup && npm run tslint && npm run tsc && npm run test",
-    "clean:all": "run-p clean:dist",
     "cleanup": "rimraf dist .nyc_output coverage",
     "tslint": "./node_modules/.bin/tslint -c ./tslint.json -p ./tsconfig.json",
     "tsc": "./node_modules/.bin/tsc",
@@ -45,8 +49,7 @@
   },
   "dependencies": {
     "@tne/common": "^1.0.0",
-    "@tne/logger": "^1.1.2",
-    "@tne/nodejs-app": "^1.0.0",
+    "@tne/nodejs-app": "^1.2.0",
     "@types/express": "^4.16.0",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",

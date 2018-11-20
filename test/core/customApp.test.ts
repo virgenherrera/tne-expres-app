@@ -3,7 +3,7 @@ import { join } from 'path';
 import { expect, should } from 'chai';
 import * as request from 'supertest';
 import * as rimraf from 'rimraf';
-import { AppInterface } from '../../src';
+import { ApplicationInterface } from '../../src';
 import * as appConfigs from '../fixtures/customApp/src';
 import { Exceptions } from '../../src/constant/Exceptions';
 import { stringify } from 'querystring';
@@ -11,7 +11,7 @@ import { stringify } from 'querystring';
 should();
 describe('@tne/express-app Interface test', () => {
 	afterEach((done) => {
-		AppInterface.destruct();
+		ApplicationInterface.destruct();
 
 		rimraf(join(__dirname, '../fixtures/customApp/logs'), () => done());
 	});
@@ -21,9 +21,9 @@ describe('@tne/express-app Interface test', () => {
 			const { baseAppSettings } = appConfigs;
 
 			try {
-				AppInterface.construct(baseAppSettings);
+				ApplicationInterface.construct(baseAppSettings);
 
-				const instance = AppInterface.getInstance();
+				const instance = ApplicationInterface.getInstance();
 				expect(instance).to.have.property('appLocals');
 
 				Object.keys(baseAppSettings.locals).forEach(local => {
@@ -39,11 +39,11 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should create an express app that exposes a public path', (done) => {
 			const { publicPathAppSettings } = appConfigs;
-			AppInterface.construct(publicPathAppSettings);
+			ApplicationInterface.construct(publicPathAppSettings);
 
 			const content = readFileSync(join(__dirname, '../fixtures/customApp/public/index.html')).toString();
 
-			request(AppInterface.getExpressApp())
+			request(ApplicationInterface.getExpressApp())
 				.get('/')
 				.expect(200)
 				.end((err, res) => {
@@ -72,7 +72,7 @@ describe('@tne/express-app Interface test', () => {
 			publicPathAppSettings.publicFolder = '/nonExistentFolder';
 
 			try {
-				expect(AppInterface.construct.bind(this, publicPathAppSettings)).to.throw(new RegExp(Exceptions.expAppBadPublicFolder));
+				expect(ApplicationInterface.construct.bind(this, publicPathAppSettings)).to.throw(new RegExp(Exceptions.expAppBadPublicFolder));
 
 				done();
 			} catch (E) {
@@ -82,9 +82,9 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should create an express app that exposes a public path and a favicon', (done) => {
 			const { faviconAppSettings } = appConfigs;
-			AppInterface.construct(faviconAppSettings);
+			ApplicationInterface.construct(faviconAppSettings);
 
-			request(AppInterface.getExpressApp())
+			request(ApplicationInterface.getExpressApp())
 				.get('/favicon.ico')
 				.expect(200)
 				.end((err, res) => {
@@ -108,7 +108,7 @@ describe('@tne/express-app Interface test', () => {
 			faviconAppSettings.faviconPath = '/nonExistentFolder/nonoExistenFaviconFile.ico';
 
 			try {
-				expect(AppInterface.construct.bind(this, faviconAppSettings)).to.throw(new RegExp(Exceptions.expAppBadFaviconFile));
+				expect(ApplicationInterface.construct.bind(this, faviconAppSettings)).to.throw(new RegExp(Exceptions.expAppBadFaviconFile));
 
 				done();
 			} catch (E) {
@@ -118,9 +118,9 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should create an express app that exposes rest endpoints', (done) => {
 			const { routedApp } = appConfigs;
-			AppInterface.construct(routedApp);
+			ApplicationInterface.construct(routedApp);
 
-			request(AppInterface.getExpressApp())
+			request(ApplicationInterface.getExpressApp())
 				.get('/api/v1/some')
 				.expect(200)
 				.end((err, res) => {
@@ -144,7 +144,7 @@ describe('@tne/express-app Interface test', () => {
 			const { routedAppBadRoutesFolder } = appConfigs;
 
 			try {
-				expect(AppInterface.construct.bind(this, routedAppBadRoutesFolder)).to.throw();
+				expect(ApplicationInterface.construct.bind(this, routedAppBadRoutesFolder)).to.throw();
 
 				done();
 			} catch (E) {
@@ -154,9 +154,9 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should create an express app that exposes rest endpoints placed on several folders', (done) => {
 			const { manyRoutesFolderApp } = appConfigs;
-			AppInterface.construct(manyRoutesFolderApp);
+			ApplicationInterface.construct(manyRoutesFolderApp);
 
-			request(AppInterface.getExpressApp())
+			request(ApplicationInterface.getExpressApp())
 				.get('/api/v1/some')
 				.expect(200)
 				.end((err, res) => {
@@ -178,16 +178,16 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should express app.logsPath prop must to match to config', () => {
 			const { baseAppSettings } = appConfigs;
-			const { logsPath, getConfig } = AppInterface.construct(baseAppSettings);
+			const { logsPath, getConfig } = ApplicationInterface.construct(baseAppSettings);
 
 			expect(logsPath).to.be.equal(getConfig('logsPath'));
 		});
 
 		it('should use default error middleware whe hitting an endpoint that does not exists', (done) => {
 			const { routedApp } = appConfigs;
-			AppInterface.construct(routedApp);
+			ApplicationInterface.construct(routedApp);
 
-			request(AppInterface.getExpressApp())
+			request(ApplicationInterface.getExpressApp())
 				.get('/api/v1/non/existent/path')
 				.expect(404)
 				.end((err, res) => {
@@ -213,9 +213,9 @@ describe('@tne/express-app Interface test', () => {
 				k1: 'v1',
 				k2: 'v2',
 			};
-			AppInterface.construct(routedApp);
+			ApplicationInterface.construct(routedApp);
 
-			request(AppInterface.getExpressApp())
+			request(ApplicationInterface.getExpressApp())
 				.get(`/api/v1/req_res?${stringify(qs)}`)
 				.expect(200)
 				.end((err, { body }) => {
