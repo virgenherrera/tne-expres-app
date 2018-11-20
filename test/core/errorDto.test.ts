@@ -164,8 +164,6 @@ describe('@tne/express-app Interface test', () => {
 						return done(err);
 					}
 
-					console.dir(body);
-
 					expect(body).to.be.an('object')
 						.that.has.keys('success', 'message', 'errors');
 
