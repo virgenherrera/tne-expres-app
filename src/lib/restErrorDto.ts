@@ -24,9 +24,6 @@ export function restErrorDto(Exception: any): IErrorDto {
 		case '500':
 			dto = new errorDto.Error500(Exception);
 			break;
-		default:
-			dto = new errorDto.Error500(Exception);
-			break;
 	}
 
 	return dto;

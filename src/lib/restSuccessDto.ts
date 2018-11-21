@@ -1,9 +1,10 @@
+import { TneLogger } from '@tne/nodejs-app';
 import * as successDto from '../entity/successDto';
 import { ISuccessDto } from '../interface';
 import { appThrowable } from './appThrowable';
 import { IGetWithPaging } from '../interface/IGetWithPaging';
 
-export function restSuccessDto(resType: string, data: IGetWithPaging | any, logger: any = console): ISuccessDto {
+export function restSuccessDto(resType: string, data: IGetWithPaging | any, logger: TneLogger): ISuccessDto {
 	const type = resType.toUpperCase();
 	let dto: ISuccessDto;
 

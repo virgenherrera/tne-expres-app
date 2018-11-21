@@ -216,7 +216,7 @@ describe('@tne/express-app Interface test', () => {
 			ApplicationInterface.construct(routedApp);
 
 			request(ApplicationInterface.getExpressApp())
-				.get(`/api/v1/req_res?${stringify(qs)}`)
+				.get(`/api/v1/success_mapReqToObj?${stringify(qs)}`)
 				.expect(200)
 				.end((err, { body }) => {
 					if (err) {
@@ -227,6 +227,33 @@ describe('@tne/express-app Interface test', () => {
 					expect(body).to.have.property('reqRes');
 
 					expect(body.reqRes).to.be.deep.equal(qs);
+
+					done();
+				});
+		});
+
+		it('should return 500 when mapReqToObj helper receives a non existent prop', (done) => {
+			const { routedApp } = appConfigs;
+			const qs = {
+				k1: 'v1',
+				k2: 'v2',
+			};
+			ApplicationInterface.construct(routedApp);
+
+			request(ApplicationInterface.getExpressApp())
+				.get(`/api/v1/error_mapReqToObj?${stringify(qs)}`)
+				.expect(500)
+				.end((err, { body }) => {
+					if (err) {
+						return done(err);
+					}
+
+					expect(body).to.be.an('object')
+						.that.has.keys('success', 'message', 'errors');
+
+					expect(body.success).to.be.a('boolean');
+					expect(body.message).to.be.a('string');
+					expect(body.errors).to.be.a('array');
 
 					done();
 				});

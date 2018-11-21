@@ -8,7 +8,7 @@ export function dtoJsonResponses(req: IRequest, res: IResponse, next: NextFuncti
 
 	// append successJson helper to response Object
 	res.successJson = function successJson(resType, data) {
-		const dto = restSuccessDto(resType, data, logger);
+		const dto = restSuccessDto(resType, data, <any>logger);
 
 		return res.status(dto.status).json(dto).end();
 	};

@@ -5,6 +5,7 @@ import * as express from 'express';
 import * as morgan from 'morgan';
 import * as serveFavicon from 'serve-favicon';
 import { join } from 'path';
+import { TneLogger } from '@tne/nodejs-app';
 import { pathExists, fileExists } from '@tne/common';
 import { appThrowable } from './appThrowable';
 import { loadRouterPath } from './loadRouterPath';
@@ -12,7 +13,7 @@ import { LogMessages } from '../constant/LogMessages';
 import { mapReqToObjMiddleware } from '../middleware/mapReqToObj';
 import { dtoJsonResponses } from '../middleware/dtoJsonResponses';
 
-export function buildExpressApp(getConfig: Function, logger: any = console): express.Application {
+export function buildExpressApp(getConfig: Function, logger: TneLogger): express.Application {
 	let app: express.Application = null;
 
 	// step 0 initExpressApp
@@ -37,13 +38,13 @@ export function buildExpressApp(getConfig: Function, logger: any = console): exp
 	return app;
 }
 
-export function initExpressApp(logger: any = console): express.Application {
+export function initExpressApp(logger: TneLogger): express.Application {
 	logger.info(LogMessages.expAppInitExpressApp);
 
 	return express();
 }
 
-export function setAppPort(app: express.Application, getConfig: Function, logger: any = console): express.Application {
+export function setAppPort(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
 	const port = getConfig('port');
 
 	logger.info(LogMessages.expAppSetAppPort.replace(':port', `${port}`));
@@ -52,7 +53,7 @@ export function setAppPort(app: express.Application, getConfig: Function, logger
 	return app;
 }
 
-export function setAppLocals(app: express.Application, getConfig: Function, logger: any = console): express.Application {
+export function setAppLocals(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
 	const locals = getConfig('locals', {});
 
 	logger.info(LogMessages.expAppSetAppLocals);
@@ -61,7 +62,7 @@ export function setAppLocals(app: express.Application, getConfig: Function, logg
 	return app;
 }
 
-export function setAppViews(app: express.Application, getConfig: Function, logger: any = console): express.Application {
+export function setAppViews(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
 	const appPath = getConfig('appPath');
 	const viewsConfig = getConfig('viewsConfig ');
 
@@ -86,7 +87,7 @@ export function setAppViews(app: express.Application, getConfig: Function, logge
 	return app;
 }
 
-export function setupAppMiddleware(app: express.Application, getConfig: Function, logger: any = console): express.Application {
+export function setupAppMiddleware(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
 	const urlEncodedConfig = getConfig('bodyParser.urlEncoded', { extended: false });
 	const jsonConfig = getConfig('bodyParser.json', {});
 	const preRouteHooks = getConfig('preRouteHooks', []);
@@ -128,7 +129,7 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 	return app;
 }
 
-export function setupPublicPath(app: express.Application, getConfig: Function, logger: any = console): express.Application {
+export function setupPublicPath(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
 	const appPath = getConfig('appPath');
 	const publicFolder = getConfig('publicFolder');
 
@@ -151,7 +152,7 @@ export function setupPublicPath(app: express.Application, getConfig: Function, l
 	return app;
 }
 
-export function setupFavicon(app: express.Application, getConfig: Function, logger: any = console): express.Application {
+export function setupFavicon(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
 	const appPath = getConfig('appPath');
 	const faviconPath = getConfig('faviconPath');
 
@@ -174,7 +175,7 @@ export function setupFavicon(app: express.Application, getConfig: Function, logg
 	return app;
 }
 
-export function setupAppRouters(app: express.Application, getConfig: Function, logger: any = console): express.Application {
+export function setupAppRouters(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
 	const appPath = getConfig('appPath');
 	const environment = getConfig('environment');
 	const routesFolder = getConfig('routesFolder');
@@ -192,7 +193,7 @@ export function setupAppRouters(app: express.Application, getConfig: Function, l
 	return app;
 }
 
-export function setErrorHandler(app: express.Application, getConfig: Function, logger: any = console): express.Application {
+export function setErrorHandler(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
 	const errorHandler = getConfig('errorHandler');
 
 	logger.info(LogMessages.setExpAppErrorHandler);

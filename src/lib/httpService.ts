@@ -1,10 +1,11 @@
 import * as http from 'http';
 import { Application } from 'express';
+import { TneLogger } from '@tne/nodejs-app';
 import { IAppConfig } from '../interface';
 import { LogMessages } from '../constant/LogMessages';
 import { Exceptions } from '../constant/Exceptions';
 
-export function startServer(app: Application, getConfig: Function, logger: any = console): http.Server {
+export function startServer(app: Application, getConfig: Function, logger: TneLogger): http.Server {
 	const port = getConfig('port');
 	let server: http.Server = null;
 
@@ -20,7 +21,7 @@ export function startServer(app: Application, getConfig: Function, logger: any =
 	return server;
 }
 
-export function stopServer(server: http.Server, settings: IAppConfig, logger: any = console): Promise<{ app: null, server: null }> {
+export function stopServer(server: http.Server, settings: IAppConfig, logger: TneLogger): Promise<{ app: null, server: null }> {
 	return new Promise((Res) => {
 		const { port } = settings;
 
@@ -33,11 +34,11 @@ export function stopServer(server: http.Server, settings: IAppConfig, logger: an
 	});
 }
 
-export function onListening(port, logger: any = console) {
+export function onListening(port, logger: TneLogger) {
 	return () => logger.info(LogMessages.httpServerListening.replace(':port', port));
 }
 
-export function onError(port, logger: any = console) {
+export function onError(port, logger: TneLogger) {
 	return (E: NodeJS.ErrnoException) => {
 		if (E.syscall !== 'listen') {
 			logger.error(E);

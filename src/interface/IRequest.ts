@@ -5,5 +5,5 @@ import { Authorization } from '../entity/authorization';
 export interface IRequest extends Request {
 	logger: TneLogger | Console;
 	authorization: Authorization;
-	mapReqToObj(paramString: string | string[]): any;
+	mapReqToObj(...requestProperties: string[]): any;
 }
