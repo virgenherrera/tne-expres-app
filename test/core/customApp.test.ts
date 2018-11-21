@@ -176,13 +176,6 @@ describe('@tne/express-app Interface test', () => {
 				});
 		});
 
-		it('should express app.logsPath prop must to match to config', () => {
-			const { baseAppSettings } = appConfigs;
-			const { logsPath, getConfig } = ApplicationInterface.construct(baseAppSettings);
-
-			expect(logsPath).to.be.equal(getConfig('logsPath'));
-		});
-
 		it('should use default error middleware whe hitting an endpoint that does not exists', (done) => {
 			const { routedApp } = appConfigs;
 			ApplicationInterface.construct(routedApp);

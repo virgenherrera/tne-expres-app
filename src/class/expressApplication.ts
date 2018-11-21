@@ -8,7 +8,7 @@ export class ExpressApplication extends NodeJsApp implements IExpressCoreApplica
 	public app = null;
 	public server = null;
 
-	constructor(settings: string | IAppConfig) {
+	constructor(settings: IAppConfig | string) {
 		super(settings, APP_DEFAULTS);
 
 		this.app = buildExpressApp(this.getConfig, this.logger);
