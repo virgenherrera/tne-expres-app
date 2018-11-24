@@ -4,11 +4,11 @@ import { restSuccessDto } from '../lib/restSuccessDto';
 import { restErrorDto } from '../lib/restErrorDto';
 
 export function dtoJsonResponses(req: IRequest, res: IResponse, next: NextFunction) {
-	const { logger = console } = req;
+	const { logger } = req;
 
 	// append successJson helper to response Object
 	res.successJson = function successJson(resType, data) {
-		const dto = restSuccessDto(resType, data, <any>logger);
+		const dto = restSuccessDto(resType, data, logger);
 
 		return res.status(dto.status).json(dto).end();
 	};

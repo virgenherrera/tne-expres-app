@@ -1,7 +1,7 @@
 import * as http from 'http';
 import { Application } from 'express';
 import { TneLogger } from '@tne/nodejs-app';
-import { IAppConfig } from '../interface';
+import { IAppSettings } from '../interface';
 import { LogMessages } from '../constant/LogMessages';
 import { Exceptions } from '../constant/Exceptions';
 
@@ -21,7 +21,7 @@ export function startServer(app: Application, getConfig: Function, logger: TneLo
 	return server;
 }
 
-export function stopServer(server: http.Server, settings: IAppConfig, logger: TneLogger): Promise<{ app: null, server: null }> {
+export function stopServer(server: http.Server, settings: IAppSettings, logger: TneLogger): Promise<{ app: null, server: null }> {
 	return new Promise((Res) => {
 		const { port } = settings;
 

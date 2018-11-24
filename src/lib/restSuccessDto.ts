@@ -2,9 +2,9 @@ import { TneLogger } from '@tne/nodejs-app';
 import * as successDto from '../entity/successDto';
 import { ISuccessDto } from '../interface';
 import { appThrowable } from './appThrowable';
-import { IGetWithPaging } from '../interface/IGetWithPaging';
+import { IPagedDto } from '../interface/IDto';
 
-export function restSuccessDto(resType: string, data: IGetWithPaging | any, logger: TneLogger): ISuccessDto {
+export function restSuccessDto(resType: string, data: IPagedDto | any, logger: TneLogger): ISuccessDto {
 	const type = resType.toUpperCase();
 	let dto: ISuccessDto;
 

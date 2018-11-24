@@ -14,3 +14,6 @@ export const APP_DEFAULTS = {
 	errorHandler: notFound,
 	httpsOptions: null,
 };
+
+export const PAGE = 1;
+export const PER_PAGE = 50;

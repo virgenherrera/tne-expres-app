@@ -6,7 +6,7 @@ A library that encapsulates `Express.js` and gives you a base to load easily the
 ## Menu
 ### [Installation](#install_instructions)
 ### [Creating a web service with `@tne/express-app`](./docs/creating_a_service.md)
-### [ApplicationInterface](#application_interface)
+### [ExpressApplication](#application_interface)
 - [construct()](#app_construct)
 - [destruct()](#app_destruct)
 - [getInstance()](#app_get_instance)
@@ -41,7 +41,7 @@ $ yarn add @tne/express-app
 ---
 <a name="application_interface"></a>
 [Back to Menu](#main_menu)
-### ApplicationInterface
+### ExpressApplication
 This Object is an interface that provides us with the methods that will allow you to create, destroy or obtain the instance of our web application.
 
 #### Methods
@@ -52,7 +52,7 @@ This Object is an interface that provides us with the methods that will allow yo
 
 #### Example usage
 ```
-import { ApplicationInterface } from '@tne/express-app';
+import { ExpressApplication } from '@tne/express-app';
 // code here
 ```
 
@@ -69,22 +69,22 @@ The method has two overloads:
 #### String Example
 file: `src/index.ts`
 ```
-import { ApplicationInterface } from '@tne/express-app';
+import { ExpressApplication } from '@tne/express-app';
 
-ApplicationInterface.construct(__dirname);
+ExpressApplication.construct(__dirname);
 ```
 
 #### [IAppConfig](#i_app_config) Example
 file: `src/index.ts`
 ```
-import { ApplicationInterface, IAppConfig } from '@tne/express-app';
+import { ExpressApplication, IAppConfig } from '@tne/express-app';
 
 const config: IAppConfig = {
 	appPath: __dirname,
 	// ... other IAppConfig's here
 };
 
-ApplicationInterface.construct(config);
+ExpressApplication.construct(config);
 ```
 
 ---
@@ -95,9 +95,9 @@ This method will stop the http service created by `Express.js` and destroy the s
 
 #### Example
 ```
-import { ApplicationInterface } from '@tne/express-app';
+import { ExpressApplication } from '@tne/express-app';
 
-ApplicationInterface.destruct();
+ExpressApplication.destruct();
 ```
 
 ---
@@ -108,9 +108,9 @@ This method returns a reference to the singleton instance of class [ExpressCoreA
 
 #### Example
 ```
-import { ApplicationInterface } from '@tne/express-app';
+import { ExpressApplication } from '@tne/express-app';
 
-const app = ApplicationInterface.getInstance();
+const app = ExpressApplication.getInstance();
 ```
 
 ---
@@ -121,9 +121,9 @@ This method returns a reference to the `app` property (which is the `Express.js`
 
 #### Example
 ```
-import { ApplicationInterface } from '@tne/express-app';
+import { ExpressApplication } from '@tne/express-app';
 
-const expressApp = ApplicationInterface.getExpressApp();
+const expressApp = ExpressApplication.getExpressApp();
 ```
 
 ---
@@ -342,7 +342,7 @@ The interfaces mentioned in this section will be importable only if you are deve
 <a name="i_app_config"></a>
 [Back to Menu](#main_menu)
 ### IAppConfig
-Used as an argument for the `ApplicationInterface.construct` method, and used to create an instance of the class [ExpressCoreApplication](./ExpressCoreApplication.md) with arguments different from those used by default.
+Used as an argument for the `ExpressApplication.construct` method, and used to create an instance of the class [ExpressCoreApplication](./ExpressCoreApplication.md) with arguments different from those used by default.
 
 #### Parameters
 | Param | Type | Required? | Description |

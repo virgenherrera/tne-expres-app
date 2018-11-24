@@ -1,6 +1,7 @@
 import { resolve } from 'url';
 import { Router } from 'express';
-import { IEndpointConfig } from './interface';
+import { IEndpointSettings } from './interface';
+import { routerMethod } from './interface/IAppSettings';
 
 export function expressRouter(constructor: any): any {
 	const router: Router = Router();
@@ -40,14 +41,20 @@ export function final<T extends { new(...args: any[]): object }>(target: T): T {
 	};
 }
 
-export function endpoint({ method, path, middleware = [] }: IEndpointConfig): any {
+export function endpoint({ method, path, middleware = [] }: IEndpointSettings): any {
 	return function (constructor: any, propertyName: string) {
+		if (path.charAt(0) !== '/') {
+			const msg = 'path argument must contain the prefix: "/".';
+			console.log(msg);
+			throw TypeError(msg);
+		}
+
 		const allowedMethods = ['head', 'options', 'get', 'post', 'put', 'patch', 'del', 'delete', 'all'];
-		const iterable = (typeof method === 'string') ? method.split(',') : method;
+		const iterable = (typeof method === 'string') ? [method] : method;
 		const value = {
 			args: [path, ...middleware, constructor[propertyName]],
-			methods: iterable.reduce((filtered, curr) => {
-				curr = curr.toLocaleLowerCase();
+			methods: iterable.reduce((filtered, curr: routerMethod) => {
+				curr = <routerMethod>curr.toLowerCase();
 
 				if (allowedMethods.indexOf(curr) > -1) {
 					filtered.push(curr);
@@ -59,7 +66,7 @@ export function endpoint({ method, path, middleware = [] }: IEndpointConfig): an
 
 
 		if (value.methods.length === 0) {
-			console.log(`omitting the endpoint Handler: '${propertyName}', because it does not match a valid Endpoint name.`);
+			console.log(`omitting the endpoint Handler: '${propertyName}', because ${method} is not a valid method.`);
 		}
 
 		return { value };

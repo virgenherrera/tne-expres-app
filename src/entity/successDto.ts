@@ -1,6 +1,6 @@
 import { Paging } from './paging';
 import { ISuccessDto } from '../interface';
-import { IGetWithPaging } from '../interface/IGetWithPaging';
+import { IPagedDto } from '../interface/IDto';
 
 
 
@@ -14,7 +14,7 @@ export class GET implements ISuccessDto {
 		return 200;
 	}
 
-	constructor(params: IGetWithPaging | any = {}) {
+	constructor(params: IPagedDto | any = {}) {
 		const {
 			rows = null,
 			uri = null,

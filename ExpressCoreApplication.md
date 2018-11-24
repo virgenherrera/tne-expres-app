@@ -1,7 +1,7 @@
 ---
 <a name="application_interface"></a>
 [Back to Menu](#main_menu)
-### ApplicationInterface
+### ExpressApplication
 Description here!
 
 #### Parameters

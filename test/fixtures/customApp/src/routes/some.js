@@ -10,6 +10,11 @@ function injectFakeAuth(req, res, next) {
 
 	req.authorization = authorization;
 
+	if (req.query.k1) {
+		req.k1 = req.query.k1;
+	}
+
+
 	return next();
 }
 
@@ -17,7 +22,7 @@ module.exports = {
 	default: router
 		.get('/api/v1/some', (req, res) => res.status(200).json({ locals: req.app.locals, query: req.query }).end())
 		.get('/api/v1/success_mapReqToObj', injectFakeAuth, (req, res) => {
-			const reqRes = req.mapReqToObj('query', 'params', 'body');
+			const reqRes = req.mapReqToObj('query', 'params', 'body', 'k1');
 
 			delete reqRes.authorization;
 

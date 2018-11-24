@@ -1,9 +1,24 @@
 import { Response } from 'express';
-import { IGetWithPaging } from './IGetWithPaging';
+import { IPagedDto } from './IDto';
+
+export type ResType =
+	'get' |
+	'GET' |
+	'post' |
+	'POST' |
+	'put' |
+	'PUT' |
+	'delete' |
+	'DELETE' |
+	'http204' |
+	'HTTP204' |
+	'204' |
+	'no_content' |
+	'NO_CONTENT'
+	;
 
 export interface IResponse extends Response {
-	successJson(resType: 'get' | 'GET', data: IGetWithPaging | any): void;
-	successJson(resType: 'post' | 'POST' | 'put' | 'PUT' | 'delete' | 'DELETE' | 'http204' | 'HTTP204' | '204' | 'no_content' | 'NO_CONTENT', data: any): void;
+	successJson(resType: ResType, data: IPagedDto | any): void;
 	errorJson(E: Error | TypeError | any): void;
 }
 
