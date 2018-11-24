@@ -1,22 +1,27 @@
-import { Request } from 'express';
+import { Exceptions } from '../constant/Exceptions';
 
-export function mapReqToObj(requestedArgs: string | string[], req: Request): any {
-	const argsArr = (typeof requestedArgs === 'string') ? requestedArgs.split(',') : requestedArgs;
-	const reqParamsArr = argsArr.map((key) => (typeof req[key] === 'object') ? req[key] : { [key]: req[key] });
-
-	// append auth data if exists
-	if (req.hasOwnProperty('authorization')) {
-		reqParamsArr.push(req['authorization']);
-	}
-
-	return Object.assign({}, ...reqParamsArr);
-}
-
-export function mapReqToObjMiddleware(...args) {
-	const [req, , next] = args;
+export function mapReqToObjMiddleware(...middlewareArgs) {
+	const [req, , next] = middlewareArgs;
 
 	// Append mapReqToObj function to request Object
-	req['mapReqToObj'] = (paramString: string | string[]) => mapReqToObj(paramString, req);
+	req.mapReqToObj = function mapReqToObj(...reqKeys: string[]): any {
+		const data: any = {};
+
+		// append auth data if exists
+		if (req.hasOwnProperty('authorization')) {
+			data.authorization = req.authorization;
+		}
+
+		return reqKeys.reduce((acc, key) => {
+			if (!req.hasOwnProperty(key)) {
+				throw { type: 500, message: Exceptions.mapReqToObjNoProp.replace(':key', key) };
+			}
+
+			const reqProp = (typeof req[key] === 'object') ? req[key] : { [key]: req[key] };
+
+			return Object.assign(acc, reqProp);
+		}, data);
+	};
 
 	return next();
 }

@@ -1,10 +1,9 @@
-import { Error404 } from '../entity/error404';
+import { IRequest, IResponse } from '../interface';
 
-export function notFound(...args) {
-	const [req, res] = args;
+export function notFound(req: IRequest, res: IResponse) {
+	const type = 404;
 	const message = `Not-existent Endpoint '${req.url}' for Method: '${req.method}'`;
-	const e404 = new Error404(message);
 
 	// return the error JSON Object
-	return res.status(e404.status).json(e404).end();
+	return res.errorJson({ type, message });
 }

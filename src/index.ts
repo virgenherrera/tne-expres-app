@@ -1,28 +1,22 @@
 import * as express from 'express';
-import { expressRouter, endpoint, config, final, prefix } from './decorators';
-import { ApplicationInterface } from './applicationInterface';
+import * as joi from 'joi';
 
-// base libraries
-export { express };
+// foundation libraries
+export { express, joi };
+
+// expressApp Interface
+export { ExpressApplication } from './class/expressApplication';
 
 // Middleware
 export { jwtAuth } from './middleware/jwtAuth';
 
+// decorators
+export { expressRouter, endpoint, config, final, prefix } from './decorators';
+
 // Interfaces
-export { IAppConfig, IEndpointConfig } from './interfaces';
-
 export {
-	// expressApp Interface
-	ApplicationInterface,
-	ApplicationInterface as AppInterface,
-	ApplicationInterface as ExpressAppInterface,
-
-	// decorators
-	expressRouter, endpoint, config, final, prefix,
-	expressRouter as RestHandler,
-	endpoint as Route,
-	endpoint as Endpoint,
-	config as Config,
-	final as Final,
-	prefix as Prefix,
-};
+	IAppSettings,
+	IEndpointSettings,
+	IRequest,
+	IResponse,
+} from './interface';

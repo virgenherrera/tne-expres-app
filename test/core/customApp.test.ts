@@ -3,15 +3,16 @@ import { join } from 'path';
 import { expect, should } from 'chai';
 import * as request from 'supertest';
 import * as rimraf from 'rimraf';
-import { AppInterface } from '../../src';
+import { ExpressApplication } from '../../src';
 import * as appConfigs from '../fixtures/customApp/src';
 import { Exceptions } from '../../src/constant/Exceptions';
 import { stringify } from 'querystring';
+import { PAGE, PER_PAGE } from '../../src/constant/config';
 
 should();
 describe('@tne/express-app Interface test', () => {
 	afterEach((done) => {
-		AppInterface.destruct();
+		ExpressApplication.destruct();
 
 		rimraf(join(__dirname, '../fixtures/customApp/logs'), () => done());
 	});
@@ -21,9 +22,9 @@ describe('@tne/express-app Interface test', () => {
 			const { baseAppSettings } = appConfigs;
 
 			try {
-				AppInterface.construct(baseAppSettings);
+				ExpressApplication.construct(baseAppSettings);
 
-				const instance = AppInterface.getInstance();
+				const instance = ExpressApplication.getInstance();
 				expect(instance).to.have.property('appLocals');
 
 				Object.keys(baseAppSettings.locals).forEach(local => {
@@ -39,11 +40,11 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should create an express app that exposes a public path', (done) => {
 			const { publicPathAppSettings } = appConfigs;
-			AppInterface.construct(publicPathAppSettings);
+			ExpressApplication.construct(publicPathAppSettings);
 
 			const content = readFileSync(join(__dirname, '../fixtures/customApp/public/index.html')).toString();
 
-			request(AppInterface.getExpressApp())
+			request(ExpressApplication.getExpressApp())
 				.get('/')
 				.expect(200)
 				.end((err, res) => {
@@ -72,7 +73,7 @@ describe('@tne/express-app Interface test', () => {
 			publicPathAppSettings.publicFolder = '/nonExistentFolder';
 
 			try {
-				expect(AppInterface.construct.bind(this, publicPathAppSettings)).to.throw(new RegExp(Exceptions.expAppBadPublicFolder));
+				expect(ExpressApplication.construct.bind(this, publicPathAppSettings)).to.throw(new RegExp(Exceptions.expAppBadPublicFolder));
 
 				done();
 			} catch (E) {
@@ -82,9 +83,9 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should create an express app that exposes a public path and a favicon', (done) => {
 			const { faviconAppSettings } = appConfigs;
-			AppInterface.construct(faviconAppSettings);
+			ExpressApplication.construct(faviconAppSettings);
 
-			request(AppInterface.getExpressApp())
+			request(ExpressApplication.getExpressApp())
 				.get('/favicon.ico')
 				.expect(200)
 				.end((err, res) => {
@@ -108,7 +109,7 @@ describe('@tne/express-app Interface test', () => {
 			faviconAppSettings.faviconPath = '/nonExistentFolder/nonoExistenFaviconFile.ico';
 
 			try {
-				expect(AppInterface.construct.bind(this, faviconAppSettings)).to.throw(new RegExp(Exceptions.expAppBadFaviconFile));
+				expect(ExpressApplication.construct.bind(this, faviconAppSettings)).to.throw(new RegExp(Exceptions.expAppBadFaviconFile));
 
 				done();
 			} catch (E) {
@@ -118,9 +119,9 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should create an express app that exposes rest endpoints', (done) => {
 			const { routedApp } = appConfigs;
-			AppInterface.construct(routedApp);
+			ExpressApplication.construct(routedApp);
 
-			request(AppInterface.getExpressApp())
+			request(ExpressApplication.getExpressApp())
 				.get('/api/v1/some')
 				.expect(200)
 				.end((err, res) => {
@@ -144,7 +145,7 @@ describe('@tne/express-app Interface test', () => {
 			const { routedAppBadRoutesFolder } = appConfigs;
 
 			try {
-				expect(AppInterface.construct.bind(this, routedAppBadRoutesFolder)).to.throw();
+				expect(ExpressApplication.construct.bind(this, routedAppBadRoutesFolder)).to.throw();
 
 				done();
 			} catch (E) {
@@ -154,9 +155,9 @@ describe('@tne/express-app Interface test', () => {
 
 		it('should create an express app that exposes rest endpoints placed on several folders', (done) => {
 			const { manyRoutesFolderApp } = appConfigs;
-			AppInterface.construct(manyRoutesFolderApp);
+			ExpressApplication.construct(manyRoutesFolderApp);
 
-			request(AppInterface.getExpressApp())
+			request(ExpressApplication.getExpressApp())
 				.get('/api/v1/some')
 				.expect(200)
 				.end((err, res) => {
@@ -176,18 +177,11 @@ describe('@tne/express-app Interface test', () => {
 				});
 		});
 
-		it('should express app.logsPath prop must to match to config', () => {
-			const { baseAppSettings } = appConfigs;
-			const { logsPath, getConfig } = AppInterface.construct(baseAppSettings);
-
-			expect(logsPath).to.be.equal(getConfig('logsPath'));
-		});
-
 		it('should use default error middleware whe hitting an endpoint that does not exists', (done) => {
 			const { routedApp } = appConfigs;
-			AppInterface.construct(routedApp);
+			ExpressApplication.construct(routedApp);
 
-			request(AppInterface.getExpressApp())
+			request(ExpressApplication.getExpressApp())
 				.get('/api/v1/non/existent/path')
 				.expect(404)
 				.end((err, res) => {
@@ -213,10 +207,10 @@ describe('@tne/express-app Interface test', () => {
 				k1: 'v1',
 				k2: 'v2',
 			};
-			AppInterface.construct(routedApp);
+			ExpressApplication.construct(routedApp);
 
-			request(AppInterface.getExpressApp())
-				.get(`/api/v1/req_res?${stringify(qs)}`)
+			request(ExpressApplication.getExpressApp())
+				.get(`/api/v1/success_mapReqToObj?${stringify(qs)}`)
 				.expect(200)
 				.end((err, { body }) => {
 					if (err) {
@@ -227,6 +221,167 @@ describe('@tne/express-app Interface test', () => {
 					expect(body).to.have.property('reqRes');
 
 					expect(body.reqRes).to.be.deep.equal(qs);
+
+					done();
+				});
+		});
+
+		it('should return 500 when mapReqToObj helper receives a non existent prop', (done) => {
+			const { routedApp } = appConfigs;
+			const qs = {
+				k1: 'v1',
+				k2: 'v2',
+			};
+			ExpressApplication.construct(routedApp);
+
+			request(ExpressApplication.getExpressApp())
+				.get(`/api/v1/error_mapReqToObj?${stringify(qs)}`)
+				.expect(500)
+				.end((err, { body }) => {
+					if (err) {
+						return done(err);
+					}
+
+					expect(body).to.be.an('object')
+						.that.has.keys('success', 'message', 'errors');
+
+					expect(body.success).to.be.a('boolean');
+					expect(body.message).to.be.a('string');
+					expect(body.errors).to.be.a('array');
+
+					done();
+				});
+		});
+
+		it('should find Pager args on queryArgs', (done) => {
+			const { routedApp } = appConfigs;
+			const qs = {
+				page: 5,
+				per_page: 70,
+			};
+			ExpressApplication.construct(routedApp);
+
+			request(ExpressApplication.getExpressApp())
+				.get(`/api/v1/pager_helper?${stringify(qs)}`)
+				.expect(200)
+				.end((err, { body }) => {
+					if (err) {
+						return done(err);
+					}
+
+					expect(body).to.be.an('object')
+						.that.has.keys(Object.keys(qs));
+
+					expect(body.page).to.be.equal(qs.page);
+					expect(body.per_page).to.be.equal(qs.per_page);
+
+					done();
+				});
+		});
+
+		it('should find Pager args on body', (done) => {
+			const { routedApp } = appConfigs;
+			const data = {
+				page: 5,
+				per_page: 70,
+			};
+			ExpressApplication.construct(routedApp);
+
+			request(ExpressApplication.getExpressApp())
+				.post(`/api/v1/pager_helper`)
+				.send(data)
+				.expect(200)
+				.end((err, { body }) => {
+					if (err) {
+						return done(err);
+					}
+
+					expect(body).to.be.an('object')
+						.that.has.keys(Object.keys(data));
+
+					expect(body.page).to.be.equal(data.page);
+					expect(body.per_page).to.be.equal(data.per_page);
+
+					done();
+				});
+		});
+
+		it('should find Pager args on headers', (done) => {
+			const { routedApp } = appConfigs;
+			const data = {
+				page: 5,
+				per_page: 70,
+			};
+			ExpressApplication.construct(routedApp);
+
+			request(ExpressApplication.getExpressApp())
+				.post(`/api/v1/pager_helper`)
+				.set(data)
+				.expect(200)
+				.end((err, { body }) => {
+					if (err) {
+						return done(err);
+					}
+
+					expect(body).to.be.an('object')
+						.that.has.keys(Object.keys(data));
+
+					expect(body.page).to.be.equal(data.page);
+					expect(body.per_page).to.be.equal(data.per_page);
+
+					done();
+				});
+		});
+
+		it('should return Pager with default args', (done) => {
+			const { routedApp } = appConfigs;
+			const data = {
+				page: PAGE,
+				per_page: PER_PAGE,
+			};
+			ExpressApplication.construct(routedApp);
+
+			request(ExpressApplication.getExpressApp())
+				.get(`/api/v1/pager_helper`)
+				.expect(200)
+				.end((err, { body }) => {
+					if (err) {
+						return done(err);
+					}
+
+					expect(body).to.be.an('object')
+						.that.has.keys(Object.keys(data));
+
+					expect(body.page).to.be.equal(data.page);
+					expect(body.per_page).to.be.equal(data.per_page);
+
+					done();
+				});
+		});
+
+		it('should return 400 when Pager args are invalid', (done) => {
+			const { routedApp } = appConfigs;
+			const data = {
+				page: 'PAGE',
+				per_page: 'ñ',
+			};
+			ExpressApplication.construct(routedApp);
+
+			request(ExpressApplication.getExpressApp())
+				.post(`/api/v1/pager_helper`)
+				.send(data)
+				.expect(400)
+				.end((err, { body }) => {
+					if (err) {
+						return done(err);
+					}
+
+					expect(body).to.be.an('object')
+						.that.has.keys('success', 'message', 'errors');
+
+					expect(body.success).to.be.an('boolean');
+					expect(body.message).to.be.an('string');
+					expect(body.errors).to.be.an('array');
 
 					done();
 				});
