@@ -55,11 +55,9 @@ describe('@tne/express-app jwtAuth Middleware', () => {
 				}
 
 				expect(body).to.be.an('object');
-				expect(body).to.have.property('status');
 				expect(body).to.have.property('message');
 				expect(body).to.have.property('errors');
 
-				expect(body.status).to.be.a('number');
 				expect(body.message).to.be.a('string');
 				expect(body.errors).to.be.a('array');
 

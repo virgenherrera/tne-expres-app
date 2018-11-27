@@ -1,6 +1,7 @@
 import { Exceptions } from '../constant/Exceptions';
+import { TneLogger } from '@tne/nodejs-app';
 
-export function appThrowable(eItem: string, msgReplacers: any = {}, path: string = null, logger: any = console): never {
+export function appThrowable(eItem: string, msgReplacers: any = {}, path: string = null, logger: TneLogger): never {
 	let eItemMsg: string = null;
 	let pathMsg: string = null;
 

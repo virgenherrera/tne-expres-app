@@ -10,7 +10,7 @@ export const locals = {
 
 export const baseAppSettings = {
 	appPath,
-	locals: locals,
+	locals,
 };
 
 export const publicPathAppSettings = {

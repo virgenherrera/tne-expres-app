@@ -4,7 +4,6 @@
     "dbaeumer.vscode-eslint",
     "EditorConfig.editorconfig",
     "eg2.tslint",
-    "mikestead.dotenv",
     "msjsdiag.debugger-for-chrome",
     "streetsidesoftware.code-spell-checker"
   ]

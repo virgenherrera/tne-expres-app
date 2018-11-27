@@ -1,4 +1,4 @@
-import { IPagingConfig } from '../interfaces';
+import { IPagingConfig } from '../interface';
 import { prevUrlStringify, nextUrlStringify } from '../lib/pagerStringify';
 
 export class Paging {

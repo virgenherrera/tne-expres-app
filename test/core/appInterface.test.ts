@@ -1,113 +1,64 @@
 import { expect, should } from 'chai';
 import * as express from 'express';
-import { AppInterface } from '../../src';
-import { settings as simpleAppSettings } from '../fixtures/simpleApp/src';
+import { ExpressApplication } from '../../src';
+import { appPath } from '../fixtures/simpleApp/src';
+import { dropLogs } from '../helpers';
 
 should();
 describe('@tne/express-app Interface test', () => {
 
-	afterEach((done) => {
-		AppInterface.destruct();
+	afterEach(async () => {
+		const instance = ExpressApplication.getInstance();
+		if (!instance) { return; }
 
-		done();
-	});
+		await ExpressApplication.destruct();
 
-	it('should expose the App interface static methods', () => {
-		expect(AppInterface).to.be.a('function');
-		expect(AppInterface.construct).to.be.a('function');
-		expect(AppInterface.destruct).to.be.a('function');
-		expect(AppInterface.getInstance).to.be.a('function');
-		expect(AppInterface.getExpressApp).to.be.a('function');
+		dropLogs(instance.logsPath);
 	});
 
 	describe('construct()', () => {
-		it('should return an express app instance after constructed', (done) => {
-			let instance;
+		it('should return an express app instance after constructed', () => {
 
-			try {
-				instance = AppInterface.construct(simpleAppSettings);
-
-				expect(instance).to.have.property('app');
-
-				done();
-			} catch (E) {
-				done(E);
-			}
+			expect(() => ExpressApplication.construct(appPath)).to.not.throw();
+			expect(ExpressApplication.getInstance()).to.have.property('app');
 		});
 
-		it('should warn when trying to construct app twice and return first constructed', (done) => {
+		it('should warn when trying to construct app twice and return first constructed', () => {
 			let instance1;
 			let instance2;
 
-			try {
-				instance1 = AppInterface.construct(simpleAppSettings);
-				instance2 = AppInterface.construct(simpleAppSettings);
+			expect(() => instance1 = ExpressApplication.construct(appPath)).to.not.throw();
+			expect(() => instance2 = ExpressApplication.construct(appPath)).to.not.throw();
 
-				expect(instance1).to.be.deep.equal(instance2);
-
-				done();
-			} catch (E) {
-				done(E);
-			}
+			expect(instance1).to.be.deep.equal(instance2);
 		});
 	});
 
 	describe('getInstance() ', () => {
 		it('should return null if construct() method wasn\'t executed before', () => {
-			expect(AppInterface.getInstance()).to.be.equal(null);
+			expect(ExpressApplication.getInstance()).to.be.equal(null);
 		});
 
-		it('should be deep equal to construct() returned value', (done) => {
+		it('should be deep equal to construct() returned value', () => {
 			let instance;
 
-			try {
-				instance = AppInterface.construct(simpleAppSettings);
-
-				expect(instance).to.be.deep.equal(AppInterface.getInstance());
-
-				done();
-			} catch (E) {
-				done(E);
-			}
+			expect(() => instance = ExpressApplication.construct(appPath)).to.not.throw();
+			expect(instance).to.be.deep.equal(ExpressApplication.getInstance());
 		});
 	});
 
 	describe('destruct()', () => {
-		it('should be null after destruct() was executed', (done) => {
-			try {
-				AppInterface.construct(simpleAppSettings);
-				AppInterface.destruct();
-
-				expect(AppInterface.getInstance()).to.be.equal(null);
-
-				done();
-			} catch (E) {
-				done(E);
-			}
+		it('should be null after destruct() was executed', async () => {
+			ExpressApplication.construct(appPath);
+			await ExpressApplication.destruct();
+			expect(ExpressApplication.getInstance()).to.be.equal(null);
 		});
 	});
 
 	describe('getExpressApp()', () => {
-		it('should null if construct() wasn\'t ran before', (done) => {
-			try {
-				expect(AppInterface.getExpressApp()).to.to.be.equal(null);
-
-				done();
-			} catch (E) {
-				done(E);
-			}
-		});
-
-		it('should be an instance if Express js if construct() was ran before', (done) => {
-			try {
-				AppInterface.construct(simpleAppSettings);
-
-				expect(AppInterface.getExpressApp()).to.include.all.keys(Object.keys(express()));
-
-				done();
-			} catch (E) {
-				done(E);
-			}
+		it('should be an instance if Express js if construct() was ran before', () => {
+			ExpressApplication.construct(appPath);
+			expect(ExpressApplication.getExpressApp()).to.include.all.keys(Object.keys(express()));
 		});
 	});
 });

@@ -1,10 +1,12 @@
 import * as http from 'http';
 import { Application } from 'express';
-import { IAppConfig } from '../interfaces';
+import { TneLogger } from '@tne/nodejs-app';
 import { LogMessages } from '../constant/LogMessages';
 import { Exceptions } from '../constant/Exceptions';
+import { AddressInfo } from 'net';
+import { ExpressApplication } from '../class/expressApplication';
 
-export function startServer(app: Application, getConfig: Function, logger: any = console): http.Server {
+export function startServer(app: Application, getConfig: Function, logger: TneLogger): http.Server {
 	const port = getConfig('port');
 	let server: http.Server = null;
 
@@ -20,25 +22,29 @@ export function startServer(app: Application, getConfig: Function, logger: any =
 	return server;
 }
 
-export function stopServer(server: http.Server, settings: IAppConfig, logger: any = console): Promise<null> {
+export function stopServer(instance: ExpressApplication): Promise<ExpressApplication> {
 	return new Promise((Res) => {
-		const { port } = settings;
+		const { getConfig, logger, server } = instance;
+		let { port } = <AddressInfo>server.address();
+		port = getConfig('port', port);
 
 		logger.info(LogMessages.haltingHttpServer.replace(':port', `${port}`));
 		server.close(() => {
 			logger.info(LogMessages.httpServerHalted.replace(':port', `${port}`));
 
-			server = null;
-			return Res(null);
+			instance.app = null;
+			instance.server = null;
+
+			return Res(instance);
 		});
 	});
 }
 
-export function onListening(port, logger: any = console) {
+export function onListening(port, logger: TneLogger) {
 	return () => logger.info(LogMessages.httpServerListening.replace(':port', port));
 }
 
-export function onError(port, logger: any = console) {
+export function onError(port, logger: TneLogger) {
 	return (E: NodeJS.ErrnoException) => {
 		if (E.syscall !== 'listen') {
 			logger.error(E);

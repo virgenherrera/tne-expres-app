@@ -1,27 +1,25 @@
 import { expect, should } from 'chai';
 import * as express from 'express';
+import * as joi from 'joi';
 import * as TneAppIndex from '../../src';
 
 should();
 describe('@tne/express-app index', () => {
 	it('should expose all framework libraries', () => {
 		const exports = [
+			// foundation libraries
 			'express',
-			'expressRouter',
-			'RestHandler',
-			'endpoint',
-			'Endpoint',
-			'Route',
-			'ExpressAppInterface',
-			'AppInterface',
-			'ApplicationInterface',
-			'config',
-			'final',
-			'prefix',
-			'Config',
-			'Final',
-			'Prefix',
+			'joi',
+			// main lib
+			'ExpressApplication',
+			// Middleware
 			'jwtAuth',
+			// decorators
+			'ExpressRouter',
+			'Endpoint',
+			'Config',
+			'FinalClass',
+			'Prefix',
 		];
 
 		expect(TneAppIndex).to.be.an('object').that.has.keys(exports);
@@ -30,16 +28,14 @@ describe('@tne/express-app index', () => {
 	it('should expose encapsulated pristine express framework', () => {
 		expect(TneAppIndex.express).to.be.a('function');
 		expect(TneAppIndex.express).to.be.deep.equal(express);
+		expect(TneAppIndex.joi).to.be.deep.equal(joi);
 	});
 
-	it('should aliases be aliases', () => {
-		expect(TneAppIndex.ExpressAppInterface).to.be.deep.equal(TneAppIndex.AppInterface);
-		expect(TneAppIndex.ApplicationInterface).to.be.deep.equal(TneAppIndex.AppInterface);
-		expect(TneAppIndex.expressRouter).to.be.deep.equal(TneAppIndex.RestHandler);
-		expect(TneAppIndex.Endpoint).to.be.deep.equal(TneAppIndex.endpoint);
-		expect(TneAppIndex.Route).to.be.deep.equal(TneAppIndex.endpoint);
-		expect(TneAppIndex.config).to.be.deep.equal(TneAppIndex.Config);
-		expect(TneAppIndex.final).to.be.deep.equal(TneAppIndex.Final);
-		expect(TneAppIndex.prefix).to.be.deep.equal(TneAppIndex.Prefix);
+	it('should expose the App interface static methods', () => {
+		expect(TneAppIndex.ExpressApplication).to.be.a('function');
+		expect(TneAppIndex.ExpressApplication.construct).to.be.a('function');
+		expect(TneAppIndex.ExpressApplication.destruct).to.be.a('function');
+		expect(TneAppIndex.ExpressApplication.getInstance).to.be.a('function');
+		expect(TneAppIndex.ExpressApplication.getExpressApp).to.be.a('function');
 	});
 });

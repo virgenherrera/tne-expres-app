@@ -1,16 +1,16 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction } from 'express';
 import { getTokenFromRequest } from '../lib/getTokenFromRequest';
 import { Authorization } from '../entity/authorization';
-import { Error401 } from '../entity/error401';
+import { Error401 } from '../entity/errorDto';
+import { IRequest, IResponse } from '../interface';
 
 export function jwtAuth(tokenValidateFunction: (token: string) => Promise<Authorization>) {
-	return async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+	return async (req: IRequest, res: IResponse, next: NextFunction): Promise<any> => {
 		try {
 			const token = getTokenFromRequest(req);
 			const data = await tokenValidateFunction(token);
 
-			req['authorization'] = new Authorization(data);
-			req['auth'] = req['authorization'];
+			req.authorization = new Authorization(data);
 
 			return next();
 		} catch (E) {
