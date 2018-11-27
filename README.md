@@ -1,5 +1,5 @@
 # @tne/express-app
-A library that encapsulates `Express.js` and gives you a base to load easily the resources and services of your web application.
+A library that encapsulates `Express.js` and `joi` and gives you a base to load easily the resources and services of your web application.
 
 ---
 <a name="main_menu"></a>
@@ -11,16 +11,18 @@ A library that encapsulates `Express.js` and gives you a base to load easily the
 - [destruct()](#app_destruct)
 - [getInstance()](#app_get_instance)
 - [getExpressApp()](#app_get_express_app)
-### Base Libraries
+### Foundation Libraries
 - [Express](#express_js)
+- [joi](#joi_js)
 ### [Decorators](#app_decorators)
-- [config](#decorator_config)
-- [endpoint](#decorator_endpoint)
-- [expressRouter](#decorator_express_router)
-- [final](#decorator_final)
-- [prefix](#decorator_prefix)
+- [Config](#decorator_config)
+- [FinalClass](#decorator_final_class)
+- [Prefix](#decorator_prefix)
+- [Endpoint](#decorator_endpoint)
+- [ExpressRouter](#decorator_express_router)
 ### [Interfaces](#app_interfaces)
-- [IAppConfig](#i_app_config)
+- [IAppSettings](#i_app_settings)
+- [ILoggerSettings](#i_logger_settings)
 - [IEndpointConfig](#i_endpoint_config)
 
 ---
@@ -63,8 +65,8 @@ import { ExpressApplication } from '@tne/express-app';
 This method will build a singleton instance of class [ExpressCoreApplication](./ExpressCoreApplication.md), start the `http` service and return a reference to the built instance.
 
 The method has two overloads:
-- string of characters
-- IAppConfig
+- string
+- IAppSettings
 
 #### String Example
 file: `src/index.ts`
@@ -74,14 +76,14 @@ import { ExpressApplication } from '@tne/express-app';
 ExpressApplication.construct(__dirname);
 ```
 
-#### [IAppConfig](#i_app_config) Example
+#### [IAppSettings](#i_app_settings) Example
 file: `src/index.ts`
 ```
-import { ExpressApplication, IAppConfig } from '@tne/express-app';
+import { ExpressApplication, IAppSettings } from '@tne/express-app';
 
-const config: IAppConfig = {
+const config: IAppSettings = {
 	appPath: __dirname,
-	// ... other IAppConfig's here
+	// ... other IAppSettings here
 };
 
 ExpressApplication.construct(config);
@@ -142,6 +144,25 @@ const app = express();
 ```
 
 ---
+<a name="joi_js"></a>
+[Back to Menu](#main_menu)
+### joi
+just the [joi](https://github.com/hapijs/joi) to create amazing schema-based validations.
+
+#### [Example](https://github.com/hapijs/joi#example)
+```
+import { joi } from '@tne/express-app';
+
+const pager = joi.object().keys({
+	page: joi.number().integer().positive().min(1).required(),
+	per_page: joi.number().integer().positive().min(1).required(),
+});
+
+const { error, value } = joi.validate({ page: 1, per_page: 50 }, pager);
+// result.error === null -> valid
+```
+
+---
 <a name="app_decorators"></a>
 [Back to Menu](#main_menu)
 ### Decorators
@@ -150,36 +171,106 @@ This library provides you with some [decorators](https://www.typescriptlang.org/
 ---
 <a name="decorator_config"></a>
 [Back to Menu](#main_menu)
-### @config
+### @Config
 The class decorator `@config` will freeze the decorating class as well as its `prototype`, so that it can not be modified externally.
 
 
 #### Example
 ```
-import { config } from '@tne/express-app';
+import { Config } from '@tne/express-app';
 
-@config
+@Config
 export class ExampleClass {
 	// class that I do not want to modify externally
 }
 ```
 
 ---
+<a name="decorator_final_class"></a>
+[Back to Menu](#main_menu)
+### @FinalClass
+This "class decorator" transforms the class into a "Final class", so it can not be extended by any other class.
+
+
+#### Example
+```
+import { FinalClass } from '@tne/express-app';
+
+@FinalClass
+export class SomeFinalClass {
+	// class that I do not want to extend
+}
+
+export class OtherClass extends SomeFinalClass {
+	// code here!
+}
+```
+The above code will throw an error when loading the "OtherClass" class.
+
+---
+<a name="decorator_prefix"></a>
+[Back to Menu](#main_menu)
+### @Prefix
+This "property decorator" prefixes the value of the property of the string or property provided in the argument to the decorated property.
+
+#### Parameters
+| Param | Type | Required? | Description |
+|-|-|-|-|
+| propToPrefix | string | true | The property that will be prefixed to the property that is being decorated. |
+
+#### Constraints
+It only works if all the properties of the decorated class are `static`.
+
+#### Example
+```
+import { Config, Prefix } from '@tne/express-app';
+
+@Config
+export class Routes {
+	static baseUrl = '/';
+	static apiUrl = '/api/v1/';
+
+	@Prefix('apiUrl')
+	static users = '/users/';
+
+	@Prefix('apiUrl')
+	static user = '/users/:id/';
+
+	@Prefix('apiUrl')
+	static users = '/users/';
+
+	@Prefix('baseUrl')
+	static view_users = '/users/:id/';
+
+	@Prefix('baseUrl')
+	static view_user = '/users/:id/';
+}
+```
+
+#### Example output
+```
+import { Routes } from 'config/route';
+
+console.log(Routes.user) // -> /api/v1/users/:id/;
+console.log(Routes.view_user) // -> /users/:id/;
+```
+
+---
 <a name="decorator_endpoint"></a>
 [Back to Menu](#main_menu)
-### @endpoint
-This "method decorator" is used in conjunction with `@expressRouter` to transform the methods of a class into usable Route handler of `Express.js`.
+### @Endpoint
+This "method decorator" is used in conjunction with `@ExpressRouter` to transform the methods of a class into usable Route handler of `Express.js`.
 
 Your must provide an object that implements the [IEndpointConfig](#i_endpoint_config) Interface as argument.
 
 #### Example
 ```
-import { endpoint, expressRouter } from '@tne/express-app';
+import { Endpoint, ExpressRouter } from '@tne/express-app';
 import { middlewareFunc } from 'some/path';
 
-@expressRouter
+@ExpressRouter
 export default class ExampleRouter {
-	@endpoint({
+	@Endpoint({
 		method: 'GET'
 		path: '/users'
 	})
@@ -187,7 +278,7 @@ export default class ExampleRouter {
 		// GET Route handler code here!
 	}
 
-	@endpoint({
+	@Endpoint({
 		method: 'POST'
 		path: '/users'
 	})
@@ -195,7 +286,7 @@ export default class ExampleRouter {
 		// POST Route handler code here!
 	}
 
-	@endpoint({
+	@Endpoint({
 		method: 'PUT'
 		path: '/users/:id',
 		middleware: [middlewareFunc]
@@ -209,18 +300,18 @@ export default class ExampleRouter {
 ---
 <a name="decorator_express_router"></a>
 [Back to Menu](#main_menu)
-### @expressRouter
-This "class decorator" is used in conjunction with `@endpoint` to transform the methods of a class into usable Route handlers for 'Express.js'.
+### @ExpressRouter
+This "class decorator" is used in conjunction with `@Endpoint` to transform the methods of a class into usable Route handlers for 'Express.js'.
 
 
 #### Example
 ```
-import { endpoint, expressRouter } from '@tne/express-app';
+import { Endpoint, ExpressRouter } from '@tne/express-app';
 import { middlewareFunc } from 'some/path';
 
-@expressRouter
+@ExpressRouter
 export default class ExampleRouter {
-	@endpoint({
+	@Endpoint({
 		method: 'GET'
 		path: '/users'
 	})
@@ -228,7 +319,7 @@ export default class ExampleRouter {
 		// GET Route handler code here!
 	}
 
-	@endpoint({
+	@Endpoint({
 		method: 'POST'
 		path: '/users'
 	})
@@ -236,7 +327,7 @@ export default class ExampleRouter {
 		// POST Route handler code here!
 	}
 
-	@endpoint({
+	@Endpoint({
 		method: 'PUT'
 		path: '/users/:id',
 		middleware: [middlewareFunc]
@@ -260,76 +351,6 @@ module.exports.default =  router
 ```
 
 ---
-<a name="decorator_final"></a>
-[Back to Menu](#main_menu)
-### @final
-This "class decorator" transforms the class into a "Final class", so it can not be extended by any other class.
-
-
-#### Example
-```
-import { final } from '@tne/express-app';
-
-@final
-export class SomeFinalClass {
-	// class that I do not want to extend
-}
-
-export class OtherClass extends SomeFinalClass {
-	// code here!
-}
-```
-The above code will throw an error when loading the "OtherClass" class.
-
----
-<a name="decorator_prefix"></a>
-[Back to Menu](#main_menu)
-### @prefix
-This "property decorator" prefixes the value of the property of the string or property provided in the argument to the decorated property.
-
-#### Parameters
-| Param | Type | Required? | Description |
-|-|-|-|-|
-The property or `String` that will be prefixed to the property that is being decorated.
-
-#### Constraints
-It only works if all the properties of the class are `static`.
-
-#### Example
-```
-import { config, prefix } from '@tne/express-app';
-
-@config
-export class Routes {
-	static baseUrl = '/';
-	static apiUrl = '/api/v1/';
-
-	@prefix('apiUrl')
-	static users = '/users/';
-
-	@prefix('apiUrl')
-	static user = '/users/:id/';
-
-	@prefix('apiUrl')
-	static users = '/users/';
-
-	@prefix('baseUrl')
-	static view_users = '/users/:id/';
-
-	@prefix('baseUrl')
-	static view_user = '/users/:id/';
-}
-```
-
-#### Example output
-```
-import { Routes } from 'config/routes';
-
-console.log(Routes.user) // -> /api/v1/users/:id/;
-console.log(Routes.view_user) // -> /users/:id/;
-```
-
----
 <a name="app_interfaces"></a>
 [Back to Menu](#main_menu)
 ### Interfaces
@@ -339,32 +360,65 @@ The interfaces that this library provides and that are described here provide he
 The interfaces mentioned in this section will be importable only if you are developing your web application with `typescript`.
 
 ---
-<a name="i_app_config"></a>
+<a name="i_app_settings"></a>
 [Back to Menu](#main_menu)
-### IAppConfig
+### IAppSettings
 Used as an argument for the `ExpressApplication.construct` method, and used to create an instance of the class [ExpressCoreApplication](./ExpressCoreApplication.md) with arguments different from those used by default.
 
 #### Parameters
 | Param | Type | Required? | Description |
 |-|-|-|-|
-appPath | string | true | The `__dirname` when using from **src/index.ts** file.
-appName | string | false | Your application name
-locals | any | false | any data that you want be available on `req.locals`
-port | number | false | The port for tour webApplication; **defaults to 3000**
-environment | string | false | When provided your app will use this env instead `NODE_ENV`
-viewsConfig | IViewsSettings | false | `IViewsSettings` to use within tour web application.
-bodyParser | IBodyParser | false | `IBodyParser` to use within tour web application.
-preRouteHooks | RequestHandler[] | false | A valid middleware array that you want to use in your `Express.js` app.
-publicFolder | string | false | Relative path to `Public` folder.
-faviconPath | string | false | Relative path to `favicon`.
-routesFolder | string | string[] | false | Relative path to Routes Folder.
-errorHandler | ErrorRequestHandler | false | Error handler that you want yo use.
+| appPath | string | true | The `__dirname` when using from **src/index.ts** file.. |
+| environment | string | false | When provided your app will use this env instead `NODE_ENV`. |
+| appName | string | false | Your application name. |
+| logger | ILoggerSettings | false | valid [ILoggerSettings](#i_logger_settings) object. |
+| locals | any | false | any data that you want push to [`app.locals`](https://expressjs.com/en/api.html#app.locals). |
+| port | number | false | The port for tour webApplication; **defaults to 3000**. |
+| faviconPath | string | false | Relative path to `favicon`. |
+| publicFolder | string | false | Relative path to `Public` folder. |
+| defaultPage | number | false | Default Page value for `req.pager` helper. |
+| defaultPerPage | number | false | Default Per_Page value for `req.pager` helper. |
+| corsOptions | CorsOptions | false | valid [CorsOptions](https://github.com/expressjs/cors#configuration-options) object. |
+| compressionOptions | CompressionOptions | false | valid [CompressionOptions](https://github.com/expressjs/compression#readme) object. |
+| urlEncodedOptions | OptionsUrlencoded | false | valid [OptionsUrlencoded](https://expressjs.com/en/api.html#express.urlencoded) object. |
+| jsonOptions | OptionsJson | false | valid [OptionsJson](https://expressjs.com/en/api.html#express.json) object. |
+| preRouteHooks | RequestHandler[] | false | A valid middleware array that you want to use in your `Express.js` app. |
+| routesFolder | string OR string[] | false | Relative path to Route(s) Folder. |
+| errorHandler | ErrorRequestHandler | false | valid [ErrorRequestHandler](https://expressjs.com/en/guide/error-handling.html) function. |
+
+
+---
+<a name="i_logger_settings"></a>
+[Back to Menu](#main_menu)
+### ILoggerSettings
+Used to config the Application logger
+
+#### Parameters
+| Param | Type | Required? | Description |
+|-|-|-|-|
+| format | Format | false | valid [winston Format](https://github.com/winstonjs/winston#formats).  |
+| level | string | false | valid [winston logging level](https://github.com/winstonjs/winston#using-custom-logging-levels) defaults to 'debug'. |
+| fileCfg | IFileSettings | false | valid [IFileSettings](#i_file_settings) object. |
+| customTransports | Transport[] | false | array of your own additional [winston Transports](https://github.com/winstonjs/winston#transports) |
+
+---
+<a name="i_file_settings"></a>
+[Back to Menu](#main_menu)
+### IFileSettings
+Used to config the Application file logger with daily rotate function.
+
+#### Parameters
+| Param | Type | Required? | Description |
+|-|-|-|-|
+| logsPath | string | true | valid Path where logFiles will be placed. |
+| logFile | string | false | basename for fileLogs. |
+| datePattern | string | false | datePattern for fileLogs, defaults to `YYYYMMDD`.|
 
 ---
 <a name="i_endpoint_config"></a>
 [Back to Menu](#main_menu)
 ### IEndpointConfig
-Interface Used to describe arguments for the method decorator "@endpoint".
+Interface Used to describe arguments for the method decorator "@Endpoint".
 
 It helps us to transform the decorated method into a useful Route handler for `Express.js`.
 

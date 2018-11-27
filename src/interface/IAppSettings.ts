@@ -42,6 +42,7 @@ export type routerMethod =
 	'put' |
 	'PUT'
 	;
+
 export interface IEndpointSettings {
 	method: routerMethod | routerMethod[];
 	path: string;

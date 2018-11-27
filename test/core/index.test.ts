@@ -7,15 +7,19 @@ should();
 describe('@tne/express-app index', () => {
 	it('should expose all framework libraries', () => {
 		const exports = [
+			// foundation libraries
 			'express',
 			'joi',
-			'jwtAuth',
+			// main lib
 			'ExpressApplication',
-			'expressRouter',
-			'endpoint',
-			'config',
-			'final',
-			'prefix',
+			// Middleware
+			'jwtAuth',
+			// decorators
+			'ExpressRouter',
+			'Endpoint',
+			'Config',
+			'FinalClass',
+			'Prefix',
 		];
 
 		expect(TneAppIndex).to.be.an('object').that.has.keys(exports);

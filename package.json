@@ -1,6 +1,6 @@
 {
   "name": "@tne/express-app",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "TNE - wrapper for Express js application",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -59,7 +59,8 @@
     "express": "^4.16.3",
     "joi": "^14.1.0",
     "morgan": "^1.9.1",
-    "serve-favicon": "^2.5.0"
+    "serve-favicon": "^2.5.0",
+    "url-join": "^4.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.5",
@@ -72,6 +73,7 @@
     "@types/rimraf": "^2.0.2",
     "@types/serve-favicon": "^2.2.30",
     "@types/supertest": "^2.0.6",
+    "@types/url-join": "^0.8.2",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
