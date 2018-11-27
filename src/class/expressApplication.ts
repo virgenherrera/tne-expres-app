@@ -14,7 +14,7 @@ export class ExpressApplication extends NodeJsApp {
 	public server: Server = null;
 
 	get appLocals(): any {
-		return this.app.locals;
+		return (this.app) ? this.app.locals : null;
 	}
 
 	constructor(settings: IAppSettings | string) {
@@ -34,9 +34,9 @@ export class ExpressApplication extends NodeJsApp {
 		return _instance;
 	}
 
-	public static destruct: () => void = () => {
+	public static destruct: () => Promise<void> = async () => {
 		if (_instance !== null) {
-			_instance.stopServer();
+			await _instance.stopServer();
 		}
 
 		_instance = null;
@@ -53,10 +53,7 @@ export class ExpressApplication extends NodeJsApp {
 	}
 
 	public async stopServer(): Promise<this> {
-		const { app, server } = await stopServer(this.server, this.settings, this.logger);
-
-		this.app = app;
-		this.server = server;
+		await stopServer(this);
 
 		return this;
 	}

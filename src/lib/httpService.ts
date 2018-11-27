@@ -1,9 +1,10 @@
 import * as http from 'http';
 import { Application } from 'express';
 import { TneLogger } from '@tne/nodejs-app';
-import { IAppSettings } from '../interface';
 import { LogMessages } from '../constant/LogMessages';
 import { Exceptions } from '../constant/Exceptions';
+import { AddressInfo } from 'net';
+import { ExpressApplication } from '../class/expressApplication';
 
 export function startServer(app: Application, getConfig: Function, logger: TneLogger): http.Server {
 	const port = getConfig('port');
@@ -21,15 +22,20 @@ export function startServer(app: Application, getConfig: Function, logger: TneLo
 	return server;
 }
 
-export function stopServer(server: http.Server, settings: IAppSettings, logger: TneLogger): Promise<{ app: null, server: null }> {
+export function stopServer(instance: ExpressApplication): Promise<ExpressApplication> {
 	return new Promise((Res) => {
-		const { port } = settings;
+		const { getConfig, logger, server } = instance;
+		let { port } = <AddressInfo>server.address();
+		port = getConfig('port', port);
 
 		logger.info(LogMessages.haltingHttpServer.replace(':port', `${port}`));
 		server.close(() => {
 			logger.info(LogMessages.httpServerHalted.replace(':port', `${port}`));
 
-			return Res({ app: null, server: null });
+			instance.app = null;
+			instance.server = null;
+
+			return Res(instance);
 		});
 	});
 }
