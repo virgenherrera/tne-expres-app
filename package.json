@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@tne/common": "^1.0.0",
-    "@tne/nodejs-app": "^1.2.3",
+    "@tne/nodejs-app": "^1.2.4",
     "@types/express": "^4.16.0",
     "@types/joi": "^14.0.0",
     "compression": "^1.7.3",

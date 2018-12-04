@@ -7,7 +7,6 @@ import { CompressionOptions } from 'compression';
 export interface IAppSettings extends INodeAppSettings {
 	locals?: any;
 	port?: number;
-	environment?: string;
 	faviconPath?: string;
 	publicFolder?: string;
 	defaultPage?: number;
