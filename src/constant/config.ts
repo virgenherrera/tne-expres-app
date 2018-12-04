@@ -5,13 +5,11 @@ export const APP_DEFAULTS = {
 	locals: null,
 	port: 3000,
 	viewsConfig: null,
-	bodyParser: null,
-	preRouteHooks: [],
+	appMiddleware: [],
 	publicFolder: null,
 	faviconPath: null,
 	routesFolder: null,
 	errorHandler: notFound,
-	httpsOptions: null,
 };
 
 export const PAGE = 1;
