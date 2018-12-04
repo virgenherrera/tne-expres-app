@@ -16,8 +16,8 @@ export interface ISuccessDto {
 }
 
 export interface IPagedDto {
-	rows?: any[];
 	uri?: string;
+	rows?: any[];
 	count?: number;
 	page?: number;
 	per_page?: number;

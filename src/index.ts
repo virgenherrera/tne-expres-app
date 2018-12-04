@@ -19,4 +19,5 @@ export {
 	IEndpointSettings,
 	IRequest,
 	IResponse,
+	IPagedDto,
 } from './interface';
