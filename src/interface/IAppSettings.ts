@@ -15,7 +15,7 @@ export interface IAppSettings extends INodeAppSettings {
 	compressionOptions?: CompressionOptions;
 	urlEncodedOptions?: OptionsUrlencoded;
 	jsonOptions?: OptionsJson;
-	preRouteHooks?: RequestHandler[];
+	appMiddleware?: RequestHandler[];
 	routesFolder?: string | string[];
 	errorHandler?: ErrorRequestHandler;
 }

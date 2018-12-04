@@ -67,11 +67,11 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 	const compressionOptions = getConfig('compressionOptions', {});
 	const urlEncodedOptions = getConfig('urlEncodedOptions', { extended: false });
 	const jsonOptions = getConfig('jsonOptions', {});
-	const preRouteHooks = getConfig('preRouteHooks', []);
+	const appMiddleware = getConfig('appMiddleware', []);
 
 	logger.info(LogMessages.expAppSetupAppMiddleware);
 
-	/* app preRouteHooks (Middleware) */
+	/* app appMiddleware (Middleware) */
 	[
 		// make available the app's logger in the req object.
 		(...args) => {
@@ -98,8 +98,8 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 		// Append pager to request Object
 		publishPager(getConfig),
 
-		...preRouteHooks,
-	].forEach(appMiddleware => app.use(appMiddleware));
+		...appMiddleware,
+	].forEach(middleware => app.use(middleware));
 
 	return app;
 }

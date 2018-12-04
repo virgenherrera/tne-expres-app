@@ -11,7 +11,6 @@ export enum LogMessages {
 	setExpAppRoute = 'Binding router: ":route" to App',
 	setExpAppRoutersEnd = 'It finished the loading of routes continuing the loading of the system.',
 	setExpAppErrorHandler = 'Setting up App error handler',
-	createHttpsServer = 'Launching httpsService at port ":port"',
 	createHttpServer = 'Launching httpService at port ":port"',
 	haltingHttpServer = 'The process to stop the port service has started: ":port"',
 	httpServerHalted = 'Service on port: ":port" now is Halted',
