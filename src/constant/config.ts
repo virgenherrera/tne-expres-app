@@ -4,7 +4,6 @@ export const APP_DEFAULTS = {
 	appName: 'express-app',
 	locals: null,
 	port: 3000,
-	environment: 'development',
 	viewsConfig: null,
 	bodyParser: null,
 	preRouteHooks: [],

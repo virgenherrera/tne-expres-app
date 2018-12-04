@@ -16,8 +16,8 @@ export class GET implements ISuccessDto {
 
 	constructor(params: IPagedDto | any = {}) {
 		const {
-			rows = null,
 			uri = null,
+			rows = null,
 			count = null,
 			page = null,
 			per_page = null,
@@ -25,7 +25,7 @@ export class GET implements ISuccessDto {
 		} = params;
 
 		// append paging Object
-		if (rows && uri && count && page && per_page) {
+		if (typeof uri === 'string' && Array.isArray(rows) && typeof count === 'number' && typeof page === 'number' && typeof per_page === 'number') {
 			this.data = rows;
 			this.paging = new Paging({ uri, count, page, per_page, queryStringArgs });
 		} else {
