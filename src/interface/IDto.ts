@@ -7,19 +7,19 @@ export interface IErrorDto {
 	errors?: Error[];
 }
 
-export interface ISuccessDto {
+export interface ISuccessDto<T = any> {
 	readonly status: number;
 	success?: boolean;
 	message?: string;
-	data?: any | any[];
+	data?: T | T[];
 	paging?: Paging;
 }
 
-export interface IPagedDto {
-	uri?: string;
-	rows?: any[];
-	count?: number;
-	page?: number;
-	per_page?: number;
+export interface IPagedDto<T = any> {
+	uri: string;
+	rows: T[];
+	count: number;
+	page: number;
+	per_page: number;
 	queryStringArgs?: any;
 }
