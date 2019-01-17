@@ -8,18 +8,16 @@ import { ExpressApplication } from '../class/expressApplication';
 
 export function startServer(app: Application, getConfig: Function, logger: TneLogger): http.Server {
 	const port = getConfig('port');
-	let server: http.Server = null;
 
 	logger.info(LogMessages.createHttpServer.replace(':port', `${port}`));
-	server = http.createServer(app).listen(port);
 
-	server
+	return http
+		.createServer(app)
+		.listen(port)
 		.removeAllListeners('listening')
 		.on('listening', onListening(port, logger))
 		.removeAllListeners('error')
 		.on('error', onError(port, logger));
-
-	return server;
 }
 
 export function stopServer(instance: ExpressApplication): Promise<ExpressApplication> {

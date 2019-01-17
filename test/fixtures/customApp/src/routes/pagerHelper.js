@@ -5,7 +5,7 @@ const path = '/api/v1/pager_helper';
 const handler = (req, res) => {
 	const pager = req.mapReqToObj('pager');
 
-	return res.status(200).json({ ...pager }).end();
+	return res.status(200).json(Object.assign({}, pager)).end();
 };
 
 module.exports = {

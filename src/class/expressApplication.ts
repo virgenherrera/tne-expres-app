@@ -6,6 +6,7 @@ import { IAppSettings } from '../interface';
 import { NodeJsApp } from '@tne/nodejs-app';
 import { startServer, stopServer } from '../lib/httpService';
 import { Exceptions } from '../constant/Exceptions';
+import { concatUri } from '../lib/concatUri';
 
 let _instance: ExpressApplication = null;
 
@@ -50,6 +51,12 @@ export class ExpressApplication extends NodeJsApp {
 		return (_instance !== null)
 			? _instance.app
 			: null;
+	}
+
+	public serviceExternalUrl(...segments: string[]): string {
+		const serviceUrl = this.getConfig('serviceUrl', '');
+
+		return concatUri(serviceUrl, ...segments);
 	}
 
 	public async stopServer(): Promise<this> {
