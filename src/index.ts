@@ -23,4 +23,5 @@ export {
 	IRequest,
 	IResponse,
 	IGetAll,
+	IPagedDto,
 } from './interface';

@@ -382,7 +382,7 @@ Used as an argument for the `ExpressApplication.construct` method, and used to c
 | compressionOptions | CompressionOptions | false | valid [CompressionOptions](https://github.com/expressjs/compression#readme) object. |
 | urlEncodedOptions | OptionsUrlencoded | false | valid [OptionsUrlencoded](https://expressjs.com/en/api.html#express.urlencoded) object. |
 | jsonOptions | OptionsJson | false | valid [OptionsJson](https://expressjs.com/en/api.html#express.json) object. |
-| preRouteHooks | RequestHandler[] | false | A valid middleware array that you want to use in your `Express.js` app. |
+| appMiddleware | RequestHandler[] | false | A valid [middleware](https://expressjs.com/en/guide/using-middleware.html#middleware.application) array that you want to use in your app. |
 | routesFolder | string OR string[] | false | Relative path to Route(s) Folder. |
 | errorHandler | ErrorRequestHandler | false | valid [ErrorRequestHandler](https://expressjs.com/en/guide/error-handling.html) function. |
 

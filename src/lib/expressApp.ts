@@ -1,7 +1,6 @@
-
+import * as express from 'express';
 import * as compression from 'compression';
 import * as cors from 'cors';
-import * as express from 'express';
 import * as morgan from 'morgan';
 import * as serveFavicon from 'serve-favicon';
 import { join } from 'path';
@@ -67,12 +66,12 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 	const compressionOptions = getConfig('compressionOptions', {});
 	const urlEncodedOptions = getConfig('urlEncodedOptions', { extended: false });
 	const jsonOptions = getConfig('jsonOptions', {});
-	const preRouteHooks = getConfig('preRouteHooks', []);
+	const appMiddleware = getConfig('appMiddleware', []);
 
 	logger.info(LogMessages.expAppSetupAppMiddleware);
 
-	/* app preRouteHooks (Middleware) */
-	[
+	/* app appMiddleware (Middleware) */
+	const serviceMiddleware = [
 		// make available the app's logger in the req object.
 		(...args) => {
 			const [req, , next] = args;
@@ -83,23 +82,36 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 		},
 		// express logger
 		morgan('dev', morganConfig),
-		// Enable CORS
-		cors(corsOptions),
-		// Enable gzip compression
-		compression(compressionOptions),
-		// Accept urlEncoded requests
-		express.urlencoded(urlEncodedOptions),
-		// Accept JSON requests
-		express.json(jsonOptions),
 		// Publish success/error helpers
 		dtoJsonResponses,
 		// Append mapReqToObj function to request Object
 		mapReqToObjMiddleware,
 		// Append pager to request Object
 		publishPager(getConfig),
+	];
 
-		...preRouteHooks,
-	].forEach(appMiddleware => app.use(appMiddleware));
+	// Enable CORS
+	if (corsOptions) {
+		serviceMiddleware.push(cors(corsOptions));
+	}
+	// Enable gzip compression
+	if (compressionOptions) {
+		serviceMiddleware.push(compression(compressionOptions));
+	}
+	// Accept urlEncoded requests
+	if (urlEncodedOptions) {
+		serviceMiddleware.push(express.urlencoded(urlEncodedOptions));
+	}
+	// Accept JSON requests
+	if (jsonOptions) {
+		serviceMiddleware.push(express.json(jsonOptions));
+	}
+
+	if (appMiddleware.length > 0) {
+		serviceMiddleware.concat(appMiddleware);
+	}
+
+	serviceMiddleware.forEach(middleware => app.use(middleware));
 
 	return app;
 }
