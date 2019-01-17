@@ -1,5 +1,6 @@
 # @tne/express-app
-A library that encapsulates `Express.js` and `joi` and gives you a base to load easily the resources and services of your web application.
+A library that encapsulates the Web Application framework `Express.js` and other common middleware tools such as `compression, cors, morgan, serve-favicon` and also the
+ `joi` the famous javascript schema validation tool, in order to provide you a base to load easily the resources and services for your web application.
 
 ---
 <a name="main_menu"></a>
