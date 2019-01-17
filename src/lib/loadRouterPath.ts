@@ -1,10 +1,11 @@
-import { pathExists, requireDirSync } from '@tne/common';
+import { pathExists } from '@tne/common';
 import { Application } from 'express';
-import { join } from 'path';
+import { join, parse } from 'path';
 import { TneLogger } from '@tne/nodejs-app';
 import { LogMessages } from '../constant/LogMessages';
 import { appThrowable } from './appThrowable';
 import { Exceptions } from '../constant/Exceptions';
+import { readdirSync } from 'fs';
 
 export function loadRouterPath(app: Application, appPath: string, routersFolder: string, logger: TneLogger): Application {
 	const routesPath = join(appPath, routersFolder);
@@ -19,17 +20,23 @@ export function loadRouterPath(app: Application, appPath: string, routersFolder:
 		);
 	}
 
-	const routers = requireDirSync(routesPath);
-	Object.keys(routers).forEach(k => {
-		const router = routers[k].default || null;
+	readdirSync(routesPath)
+		.forEach(file => {
+			const filePath = join(routesPath, file);
+			const { name, ext } = parse(filePath);
 
-		if (router) {
-			logger.info(LogMessages.setExpAppRoute.replace(':route', k));
-			app.use(router.bind(this));
-		} else {
-			logger.warn(Exceptions.invalidAppRouterExport.replace(':router', k));
-		}
-	});
+			if (['.ts', '.js'].indexOf(ext) < 0 || name === 'index') { return; }
+
+			const module = require(filePath);
+			const router = module.default || null;
+
+			if (router) {
+				logger.info(LogMessages.setExpAppRoute.replace(':route', name));
+				app.use(router);
+			} else {
+				logger.warn(Exceptions.invalidAppRouterExport.replace(':router', name));
+			}
+		});
 
 	logger.info(LogMessages.setExpAppRoutersEnd);
 
