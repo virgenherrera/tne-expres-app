@@ -14,6 +14,10 @@ describe('@tne/express-app index', () => {
 			'ExpressApplication',
 			// Middleware
 			'jwtAuth',
+			// libraries
+			'parseSort',
+			'parseSkipLimit',
+			'joiValidate',
 			// decorators
 			'ExpressRouter',
 			'Endpoint',

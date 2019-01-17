@@ -10,6 +10,9 @@ export { ExpressApplication } from './class/expressApplication';
 // Middleware
 export { jwtAuth } from './middleware/jwtAuth';
 
+// libraries
+export { parseSort, parseSkipLimit, joiValidate } from './lib/exportedLibraries';
+
 // decorators
 export { ExpressRouter, Endpoint, Config, FinalClass, Prefix } from './decorator';
 
@@ -19,4 +22,5 @@ export {
 	IEndpointSettings,
 	IRequest,
 	IResponse,
+	IGetAll,
 } from './interface';
