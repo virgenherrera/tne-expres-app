@@ -43,6 +43,10 @@ export class ExpressApplication extends NodeJsApp {
 		_instance = null;
 	}
 
+	public static get instance(): ExpressApplication {
+		return _instance;
+	}
+
 	public static getInstance: () => ExpressApplication = () => {
 		return _instance;
 	}
