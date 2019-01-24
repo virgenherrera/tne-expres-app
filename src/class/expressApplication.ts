@@ -1,18 +1,20 @@
-import { Server } from 'http';
+import { Server as httpServer } from 'http';
+import { Server as httpsServer } from 'https';
 import { Application } from 'express';
 import { APP_DEFAULTS } from '../constant/config';
 import { buildExpressApp } from '../lib/expressApp';
 import { IAppSettings } from '../interface';
 import { NodeJsApp } from '@tne/nodejs-app';
-import { startServer, stopServer } from '../lib/httpService';
+import { start as startServer, stop as stopServer } from '../lib/service';
 import { Exceptions } from '../constant/Exceptions';
 import { concatUri } from '../lib/concatUri';
+import { URL } from 'url';
 
 let _instance: ExpressApplication = null;
 
 export class ExpressApplication extends NodeJsApp {
 	public app: Application = null;
-	public server: Server = null;
+	public server: httpServer | httpsServer = null;
 
 	get appLocals(): any {
 		return (this.app) ? this.app.locals : null;
@@ -58,9 +60,16 @@ export class ExpressApplication extends NodeJsApp {
 	}
 
 	public serviceExternalUrl(...segments: string[]): string {
-		const serviceUrl = this.getConfig('serviceUrl', '');
+		const protocol = this.getConfig('httpsOptions') ? 'https' : 'http';
+		const hostname = this.getConfig('hostname', 'localhost');
+		const port = this.getConfig('port');
+		const serviceUrl = new URL(`${protocol}://${hostname}`);
 
-		return concatUri(serviceUrl, ...segments);
+		if (parseInt(port, 10) !== 80) {
+			serviceUrl.port = `${port}`;
+		}
+
+		return concatUri(serviceUrl.href, ...segments);
 	}
 
 	public async stopServer(): Promise<this> {

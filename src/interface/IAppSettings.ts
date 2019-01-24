@@ -4,17 +4,27 @@ import { IAppSettings as INodeAppSettings } from '@tne/nodejs-app';
 import { CorsOptions } from 'cors';
 import { CompressionOptions } from 'compression';
 
+export type middlewareDefaults = 'default';
+
+export interface IHttpsOptions {
+	key: string;
+	cert: string;
+	passphrase: string;
+}
+
 export interface IAppSettings extends INodeAppSettings {
+	hostname: string;
+	port: number;
 	locals?: any;
-	port?: number;
 	faviconPath?: string;
 	publicFolder?: string;
 	defaultPage?: number;
 	defaultPerPage?: number;
-	corsOptions?: CorsOptions;
-	compressionOptions?: CompressionOptions;
-	urlEncodedOptions?: OptionsUrlencoded;
-	jsonOptions?: OptionsJson;
+	corsOptions?: middlewareDefaults | CorsOptions;
+	compressionOptions?: middlewareDefaults | CompressionOptions;
+	urlEncodedOptions?: middlewareDefaults | OptionsUrlencoded;
+	jsonOptions?: middlewareDefaults | OptionsJson;
+	httpsOptions?: IHttpsOptions;
 	appMiddleware?: RequestHandler[];
 	routesFolder?: string | string[];
 	errorHandler?: ErrorRequestHandler;

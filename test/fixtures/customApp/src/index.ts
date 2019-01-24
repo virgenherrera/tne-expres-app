@@ -25,7 +25,11 @@ export const faviconAppSettings = {
 
 export const routedApp = {
 	appPath,
-	routesFolder: './routes'
+	routesFolder: './routes',
+	corsOptions: 'default',
+	compressionOptions: 'default',
+	urlEncodedOptions: 'default',
+	jsonOptions: 'default',
 };
 
 export const routedAppBadRoutesFolder = {
