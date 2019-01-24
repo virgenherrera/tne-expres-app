@@ -59,7 +59,7 @@ export class ExpressApplication extends NodeJsApp {
 			: null;
 	}
 
-	public serviceExternalUrl(...segments: string[]): string {
+	public buildUrl(...segments: string[]): string {
 		const protocol = this.getConfig('httpsOptions') ? 'https' : 'http';
 		const hostname = this.getConfig('hostname', 'localhost');
 		const port = this.getConfig('port');
