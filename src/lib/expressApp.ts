@@ -61,11 +61,11 @@ export function setAppLocals(app: express.Application, getConfig: Function, logg
 }
 
 export function setupAppMiddleware(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
-	const morganConfig = { stream: { write: logger.info.bind(this) } };
-	const corsOptions = getConfig('corsOptions', {});
-	const compressionOptions = getConfig('compressionOptions', {});
-	const urlEncodedOptions = getConfig('urlEncodedOptions', { extended: false });
-	const jsonOptions = getConfig('jsonOptions', {});
+	const morganConfig = { stream: { write: logger.info } };
+	const corsOptions = getConfig('corsOptions');
+	const compressionOptions = getConfig('compressionOptions');
+	const urlEncodedOptions = getConfig('urlEncodedOptions');
+	const jsonOptions = getConfig('jsonOptions');
 	const appMiddleware = getConfig('appMiddleware', []);
 
 	logger.info(LogMessages.expAppSetupAppMiddleware);
@@ -81,7 +81,7 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 			return next();
 		},
 		// express logger
-		morgan('dev', morganConfig),
+		morgan('tiny', morganConfig),
 		// Publish success/error helpers
 		dtoJsonResponses,
 		// Append mapReqToObj function to request Object
@@ -91,23 +91,51 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 	];
 
 	// Enable CORS
-	if (corsOptions) {
+	if (corsOptions === 'default') {
+		logger.info('- App is using cors default config');
+		serviceMiddleware.push(cors({}));
+	} else if (corsOptions) {
+		logger.info('- App is using cors custom config');
 		serviceMiddleware.push(cors(corsOptions));
+	} else {
+		logger.warn('- App is not using cors');
 	}
+
 	// Enable gzip compression
-	if (compressionOptions) {
+	if (compressionOptions === 'default') {
+		logger.info('- App is using compression default config');
+		serviceMiddleware.push(compression({}));
+	} else if (compressionOptions) {
+		logger.info('- App is using compression custom config');
 		serviceMiddleware.push(compression(compressionOptions));
+	} else {
+		logger.warn('- App is not using compression');
 	}
+
 	// Accept urlEncoded requests
-	if (urlEncodedOptions) {
+	if (urlEncodedOptions === 'default') {
+		logger.info('- App is using express.urlencoded default config');
+		serviceMiddleware.push(express.urlencoded({ extended: false }));
+	} else if (urlEncodedOptions) {
+		logger.info('- App is using express.urlencoded custom config');
 		serviceMiddleware.push(express.urlencoded(urlEncodedOptions));
+	} else {
+		logger.warn('- App is not using express.urlencoded');
 	}
+
 	// Accept JSON requests
-	if (jsonOptions) {
+	if (jsonOptions === 'default') {
+		logger.info('- App is using express.json default config');
+		serviceMiddleware.push(express.json({}));
+	} else if (jsonOptions) {
+		logger.info('- App is using express.json custom config');
 		serviceMiddleware.push(express.json(jsonOptions));
+	} else {
+		logger.warn('- App is not using express.json');
 	}
 
 	if (appMiddleware.length > 0) {
+		logger.info(`- App is using "${appMiddleware.length}" custom Application-level middleware`);
 		serviceMiddleware.concat(appMiddleware);
 	}
 

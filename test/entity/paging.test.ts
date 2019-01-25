@@ -79,8 +79,6 @@ describe('@tne/express-app entity/paging', () => {
 		const { qsArgs } = pagingFixtures;
 		const paging = new Paging(qsArgs);
 
-		console.dir(paging);
-
 		expect(paging).to.be.an('object')
 			.that.has.keys('count', 'page', 'prev', 'next');
 
