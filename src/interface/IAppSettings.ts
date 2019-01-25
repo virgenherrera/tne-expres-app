@@ -13,8 +13,8 @@ export interface IHttpsOptions {
 }
 
 export interface IAppSettings extends INodeAppSettings {
-	hostname: string;
-	port: number;
+	hostname?: string;
+	port?: number;
 	locals?: any;
 	faviconPath?: string;
 	publicFolder?: string;
