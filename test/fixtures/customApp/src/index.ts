@@ -23,7 +23,7 @@ export const faviconAppSettings = {
 	faviconPath: '../public/favicon.ico',
 };
 
-export const routedApp = {
+export const routedApp: any = {
 	appPath,
 	routesFolder: './routes',
 	corsOptions: 'default',

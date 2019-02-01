@@ -13,7 +13,7 @@ export interface IAuthorization {
 }
 
 
-export { IAppSettings, IEndpointSettings } from './IAppSettings';
+export { CorsOptions, CompressionOptions, OptionsUrlencoded, OptionsJson, IAppSettings, IEndpointSettings } from './IAppSettings';
 export { IErrorDto, ISuccessDto, IPagedDto } from './IDto';
 export { IRequest } from './IRequest';
 export { IResponse } from './IResponse';

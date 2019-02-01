@@ -1,22 +1,26 @@
+import { AddressInfo } from 'net';
+import { Application } from 'express';
+import { join } from 'path';
+import { networkInterfaces } from 'os';
+import { readFileSync } from 'fs';
+import { URL } from 'url';
 import * as http from 'http';
 import * as https from 'https';
-import { Application } from 'express';
-import { TneLogger } from '@tne/nodejs-app';
-import { LogMessages } from '../constant/LogMessages';
+import { fileExists } from '@tne/common';
 import { Exceptions } from '../constant/Exceptions';
-import { AddressInfo } from 'net';
 import { ExpressApplication } from '../class/expressApplication';
 import { IHttpsOptions } from '../interface/IAppSettings';
-import { join } from 'path';
-import { fileExists } from '@tne/common';
-import { readFileSync } from 'fs';
-import { parse } from 'url';
-import { bindOnListening } from './bindOnListening';
+import { LogMessages } from '../constant/LogMessages';
+import { protocolType, loggerType, serverType } from '../interface/types';
 
-export function start(app: Application, getConfig: Function, logger: TneLogger): http.Server | https.Server {
+export function start(app: Application, getConfig: Function, logger: loggerType): serverType {
+	const appName = getConfig('appName');
 	const appPath = getConfig('appPath');
-	const port = getConfig('port');
+	const environment = app.get('environment');
+	const hostname = getConfig('hostname');
 	const httpsOptions = getConfig('httpsOptions');
+	const port = getConfig('port');
+	let server: serverType = null;
 
 	if (httpsOptions) {
 		const { key = '', cert = '', passphrase = '' } = <IHttpsOptions>new Object(httpsOptions);
@@ -45,8 +49,6 @@ export function start(app: Application, getConfig: Function, logger: TneLogger):
 			logger.error(msg);
 			throw new Error(msg);
 		} else {
-			const serviceUrl = getConfig('serviceUrl', 'http://localhost/');
-			const { hostname } = parse(serviceUrl);
 			const opts: https.ServerOptions = {
 				passphrase,
 				key: readFileSync(keyPath),
@@ -54,32 +56,21 @@ export function start(app: Application, getConfig: Function, logger: TneLogger):
 			};
 
 			logger.info(LogMessages.createHttpsServer.replace(':port', `${port}`));
-			const server = https.createServer(opts, app)
-				.listen(port, hostname);
-
-			server
-				.removeAllListeners('listening')
-				.on('listening', bindOnListening(server, getConfig, logger, 'https'))
-				.removeAllListeners('error')
-				.on('error', onError(port, logger));
-
-			return server;
-
+			return https.createServer(opts, app).listen(port, hostname);
 		}
 	} else {
 
 		logger.info(LogMessages.createHttpServer.replace(':port', `${port}`));
-		const server = http
-			.createServer(app)
-			.listen(port);
-		server
-			.removeAllListeners('listening')
-			.on('listening', bindOnListening(server, getConfig, logger))
-			.removeAllListeners('error')
-			.on('error', onError(port, logger));
-
-		return server;
+		server = http.createServer(app).listen(port);
 	}
+
+	server
+		.removeAllListeners('error')
+		.removeAllListeners('listening')
+		.on('error', bindOnError(port, logger))
+		.on('listening', bindOnListening(appName, environment, 'http', hostname, port, logger));
+
+	return server;
 }
 
 export function stop(instance: ExpressApplication): Promise<ExpressApplication> {
@@ -99,8 +90,44 @@ export function stop(instance: ExpressApplication): Promise<ExpressApplication> 
 		});
 	});
 }
-export function onError(port, logger: TneLogger) {
-	return (E: NodeJS.ErrnoException) => {
+
+export function bindOnListening(appName: string, environment: string, protocol: protocolType, hostname: string, port: string, logger: loggerType): () => void {
+	return function onServiceListening(): void {
+		const urlObj = new URL(`${protocol}://${hostname}:${port}`);
+
+		logger.info(`"${appName}" is running on port: "${port}" on "${environment}" environment`);
+
+		// log hostname
+		if (hostname !== 'localhost') {
+			logger.info(`Listening in the following hostname:`);
+			logger.info(`- ${urlObj.href}`);
+		}
+
+		// log local hosts
+		logger.info(`Listening in the following local addresses:`);
+		['localhost', '127.0.0.1'].forEach(localhost => {
+			urlObj.hostname = localhost;
+			logger.info(`- ${urlObj.href}`);
+		});
+
+		// log network interfaces
+		logger.info(`Listening in the following local network addresses:`);
+		const interfaces = networkInterfaces();
+		Object.keys(interfaces).forEach(k => {
+			Object.keys(interfaces[k]).forEach(l => {
+				const address = interfaces[k][l];
+				if (address.family === 'IPv4' && !address.internal) {
+					urlObj.hostname = address.address;
+
+					logger.info(`- ${urlObj.href}`);
+				}
+			});
+		});
+	};
+}
+
+export function bindOnError(port, logger: loggerType) {
+	return function onError(E: NodeJS.ErrnoException) {
 		if (E.syscall !== 'listen') {
 			logger.error(E);
 			throw E;

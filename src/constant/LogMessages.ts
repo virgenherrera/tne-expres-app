@@ -1,6 +1,7 @@
 export enum LogMessages {
 	expAppInitExpressApp = 'Creating a new Express Application',
 	expAppSetAppPort = 'Setting App Port to ":port"',
+	expAppSetAppHost = 'Setting App Host to ":host"',
 	expAppSetAppLocals = 'Setting App locals',
 	expAppSetAppViews = 'Setting App ":engine" as App Views engine and ":path" as App Views path',
 	expAppSetupAppMiddleware = 'Setting App-level middleware',

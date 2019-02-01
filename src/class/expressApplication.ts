@@ -1,19 +1,19 @@
 import { Server as httpServer } from 'http';
 import { Server as httpsServer } from 'https';
-import { Application } from 'express';
-import { APP_DEFAULTS } from '../constant/config';
-import { buildExpressApp } from '../lib/expressApp';
-import { IAppSettings } from '../interface';
-import { NodeJsApp } from '@tne/nodejs-app';
-import { start as startServer, stop as stopServer } from '../lib/service';
-import { Exceptions } from '../constant/Exceptions';
-import { concatUri } from '../lib/concatUri';
 import { URL } from 'url';
+import { NodeJsApp } from '@tne/nodejs-app';
+import { APP_DEFAULTS } from '../constant/config';
+import { appType } from '../interface/types';
+import { buildExpressApp } from '../lib/buildExpressApp';
+import { concatUri } from '../lib/concatUri';
+import { Exceptions } from '../constant/Exceptions';
+import { IAppSettings } from '../interface';
+import { start as startServer, stop as stopServer } from '../lib/service';
 
 let _instance: ExpressApplication = null;
 
 export class ExpressApplication extends NodeJsApp {
-	public app: Application = null;
+	public app: appType = null;
 	public server: httpServer | httpsServer = null;
 
 	get appLocals(): any {
@@ -23,7 +23,7 @@ export class ExpressApplication extends NodeJsApp {
 	constructor(settings: IAppSettings | string) {
 		super(settings, APP_DEFAULTS);
 
-		this.app = buildExpressApp(this.getConfig, this.logger);
+		this.app = buildExpressApp(this.settings, this.getConfig, this.logger);
 		this.server = startServer(this.app, this.getConfig, this.logger);
 	}
 
@@ -53,7 +53,7 @@ export class ExpressApplication extends NodeJsApp {
 		return _instance;
 	}
 
-	public static getExpressApp: () => Application = () => {
+	public static getExpressApp: () => appType = () => {
 		return (_instance !== null)
 			? _instance.app
 			: null;
@@ -72,7 +72,7 @@ export class ExpressApplication extends NodeJsApp {
 		return concatUri(serviceUrl.href, ...segments);
 	}
 
-	public async stopServer(): Promise<this> {
+	public async stopServer(): Promise<ExpressApplication> {
 		await stopServer(this);
 
 		return this;
