@@ -12,6 +12,11 @@ export interface IHttpsOptions {
 	passphrase: string;
 }
 
+export { CorsOptions };
+export { CompressionOptions };
+export { OptionsUrlencoded };
+export { OptionsJson };
+
 export interface IAppSettings extends INodeAppSettings {
 	hostname?: string;
 	port?: number;

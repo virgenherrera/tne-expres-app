@@ -4,7 +4,6 @@ import * as cors from 'cors';
 import * as morgan from 'morgan';
 import * as serveFavicon from 'serve-favicon';
 import { join } from 'path';
-import { TneLogger } from '@tne/nodejs-app';
 import { pathExists, fileExists } from '@tne/common';
 import { appThrowable } from './appThrowable';
 import { loadRouterPath } from './loadRouterPath';
@@ -12,16 +11,17 @@ import { LogMessages } from '../constant/LogMessages';
 import { mapReqToObjMiddleware } from '../middleware/mapReqToObj';
 import { dtoJsonResponses } from '../middleware/dtoJsonResponses';
 import { publishPager } from '../middleware/publishPager';
+import { appType, loggerType } from '../interface/types';
 
-export function buildExpressApp(getConfig: Function, logger: TneLogger): express.Application {
-	let app: express.Application = null;
+export function buildExpressApp(settings: any, getConfig: Function, logger: loggerType): appType {
+	let app: appType = null;
 
 	// initExpressApp
 	app = initExpressApp(logger);
 	// setPort
-	app = setAppPort(app, getConfig, logger);
+	app = setAppPortHost(app, getConfig, logger);
 	// setAppLocals
-	app = setAppLocals(app, getConfig, logger);
+	app = setAppLocals(app, getConfig, settings, logger);
 	// setupAppMiddleware
 	app = setupAppMiddleware(app, getConfig, logger);
 	// setupPublicPath
@@ -36,31 +36,35 @@ export function buildExpressApp(getConfig: Function, logger: TneLogger): express
 	return app;
 }
 
-export function initExpressApp(logger: TneLogger): express.Application {
+export function initExpressApp(logger: loggerType): appType {
 	logger.info(LogMessages.expAppInitExpressApp);
 
 	return express();
 }
 
-export function setAppPort(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
+export function setAppPortHost(app: appType, getConfig: Function, logger: loggerType): appType {
 	const port = getConfig('port');
+	const host = getConfig('hostname');
 
 	logger.info(LogMessages.expAppSetAppPort.replace(':port', `${port}`));
 	app.set('port', port);
 
+	logger.info(LogMessages.expAppSetAppHost.replace(':host', `${host}`));
+	app.set('host', host);
+
 	return app;
 }
 
-export function setAppLocals(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
+export function setAppLocals(app: appType, getConfig: Function, settings: any, logger: loggerType): appType {
 	const locals = getConfig('locals', {});
 
 	logger.info(LogMessages.expAppSetAppLocals);
-	Object.assign(app.locals, { ...locals }, app.locals);
+	Object.assign(app.locals, { ...locals }, { ...new Object(settings) });
 
 	return app;
 }
 
-export function setupAppMiddleware(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
+export function setupAppMiddleware(app: appType, getConfig: Function, logger: loggerType): appType {
 	const morganConfig = { stream: { write: logger.info } };
 	const corsOptions = getConfig('corsOptions');
 	const compressionOptions = getConfig('compressionOptions');
@@ -144,7 +148,7 @@ export function setupAppMiddleware(app: express.Application, getConfig: Function
 	return app;
 }
 
-export function setupPublicPath(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
+export function setupPublicPath(app: appType, getConfig: Function, logger: loggerType): appType {
 	const appPath = getConfig('appPath');
 	const publicFolder = getConfig('publicFolder');
 
@@ -167,7 +171,7 @@ export function setupPublicPath(app: express.Application, getConfig: Function, l
 	return app;
 }
 
-export function setupFavicon(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
+export function setupFavicon(app: appType, getConfig: Function, logger: loggerType): appType {
 	const appPath = getConfig('appPath');
 	const faviconPath = getConfig('faviconPath');
 
@@ -190,7 +194,7 @@ export function setupFavicon(app: express.Application, getConfig: Function, logg
 	return app;
 }
 
-export function setupAppRouters(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
+export function setupAppRouters(app: appType, getConfig: Function, logger: loggerType): appType {
 	const appPath = getConfig('appPath');
 	const environment = getConfig('environment');
 	const routesFolder = getConfig('routesFolder');
@@ -208,7 +212,7 @@ export function setupAppRouters(app: express.Application, getConfig: Function, l
 	return app;
 }
 
-export function setErrorHandler(app: express.Application, getConfig: Function, logger: TneLogger): express.Application {
+export function setErrorHandler(app: appType, getConfig: Function, logger: loggerType): appType {
 	const errorHandler = getConfig('errorHandler');
 
 	logger.info(LogMessages.setExpAppErrorHandler);

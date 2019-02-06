@@ -20,6 +20,10 @@ export { ExpressRouter, Endpoint, Config, FinalClass, Prefix } from './decorator
 export {
 	IAppSettings,
 	IEndpointSettings,
+	CorsOptions,
+	CompressionOptions,
+	OptionsUrlencoded,
+	OptionsJson,
 	IRequest,
 	IResponse,
 	IGetAll,
