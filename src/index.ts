@@ -28,4 +28,5 @@ export {
 	IResponse,
 	IGetAll,
 	IPagedDto,
+
 } from './interface';

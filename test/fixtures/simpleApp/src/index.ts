@@ -1,4 +1,5 @@
-export const appPath = __dirname;
-export const settings = {
-	appPath,
+import { IAppSettings } from '../../../../src';
+
+export const settings: IAppSettings = {
+	appPath: __dirname,
 };

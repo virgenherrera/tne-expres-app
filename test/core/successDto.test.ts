@@ -6,7 +6,6 @@ import { stringify } from 'querystring';
 import { PAGE, PER_PAGE } from '../../src/constant/config';
 import { dropLogs } from '../helpers';
 
-
 should();
 describe('@tne/express-app successDtp test Suite', () => {
 	before(() => ExpressApplication.construct(routedApp));
@@ -173,7 +172,7 @@ describe('@tne/express-app successDtp test Suite', () => {
 					expect(body.message).to.be.an('string');
 					expect(body.data).to.be.an('array');
 					expect(body.paging).to.be.an('object')
-						.that.has.keys('count', 'page', 'prev', 'next');
+						.that.has.keys('count', 'page', 'per_page', 'prev', 'next');
 
 					done();
 				});

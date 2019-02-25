@@ -1,4 +1,4 @@
-import { TneLogger } from '@tne/nodejs-app';
+import { TneLogger } from '@tne/logger';
 import * as successDto from '../entity/successDto';
 import { ISuccessDto } from '../interface';
 import { appThrowable } from './appThrowable';

@@ -8,7 +8,7 @@ import * as http from 'http';
 import * as https from 'https';
 import { fileExists } from '@tne/common';
 import { Exceptions } from '../constant/Exceptions';
-import { ExpressApplication } from '../class/expressApplication';
+import { AppCore } from '../class/appCore';
 import { IHttpsOptions } from '../interface/IAppSettings';
 import { LogMessages } from '../constant/LogMessages';
 import { protocolType, loggerType, serverType } from '../interface/types';
@@ -73,7 +73,7 @@ export function start(app: Application, getConfig: Function, logger: loggerType)
 	return server;
 }
 
-export function stop(instance: ExpressApplication): Promise<ExpressApplication> {
+export function stop(instance: AppCore): Promise<AppCore> {
 	return new Promise((Res) => {
 		const { getConfig, logger, server } = instance;
 		let { port } = <AddressInfo>server.address();

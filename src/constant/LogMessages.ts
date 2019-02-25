@@ -7,7 +7,7 @@ export enum LogMessages {
 	expAppSetupAppMiddleware = 'Setting App-level middleware',
 	expAppSetupAppPublic = 'Setting App Public folder from: ":path"',
 	expAppSetupSppFavicon = 'Setting App favicon from path: ":path"',
-	setExpAppRoutersDetected = 'Loading ":num" directories of routes, according to the indicated in the file config/:env.json',
+	setExpAppRoutersDetected = 'Loading ":num" directories of routes.',
 	setExpAppRouters = 'Setting up App routers from path: ":path"',
 	setExpAppRoute = 'Binding router: ":route" to App',
 	setExpAppRoutersEnd = 'It finished the loading of routes continuing the loading of the system.',
