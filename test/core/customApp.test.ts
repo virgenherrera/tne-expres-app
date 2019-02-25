@@ -202,8 +202,7 @@ describe('@tne/express-app Interface test', () => {
 			});
 	});
 
-	it('should getConfig find data from process.env when envVal begins with "$keys."', () => {
-
+	it('should getConfig find data from process.env when envVal begins with "$keys."', (done) => {
 		const keys = require('../fixtures/customApp/config/keys.json');
 
 		ExpressApplication.construct(appConfigs.baseAppSettings);
@@ -214,12 +213,13 @@ describe('@tne/express-app Interface test', () => {
 		const { getConfig } = instance;
 		expect(getConfig).to.be.a('function');
 
-
 		expect(getConfig('database.mongoose.user')).to.be.equal(keys.database.username);
 		expect(getConfig('database.mongoose.pass')).to.be.equal(keys.database.password);
+
+		done();
 	});
 
-	it('should getConfig find data from process.env when envVal begins with "$env."', () => {
+	it('should getConfig find data from process.env when envVal begins with "$env."', (done) => {
 		ExpressApplication.construct(appConfigs.baseAppSettings);
 
 		const instance = ExpressApplication.getInstance();
@@ -228,8 +228,9 @@ describe('@tne/express-app Interface test', () => {
 		const { getConfig } = instance;
 		expect(getConfig).to.be.a('function');
 
-
 		expect(getConfig('someConf')).to.be.equal(process.env.NODE_ENV);
 		expect(getConfig('someConf2')).to.be.equal(process.env.PWD);
+
+		done();
 	});
 });

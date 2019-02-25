@@ -23,7 +23,7 @@ export function parseSettings(args: IAppSettings | string): IAppSettings {
 	const config = getJsonFileEnvData(configPath, settings.environment);
 
 	// try to load configPath/keys.json or assign {}
-	const keys = { keys: getJsonFileKeysData(configPath) };
+	const keys = getJsonFileKeysData(configPath);
 
 	// ParseLogger Config
 	const logger = setLoggerCfg(settings);
