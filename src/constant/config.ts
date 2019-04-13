@@ -1,6 +1,14 @@
 import { notFound } from '../middleware/notFound';
 
+export enum Defaults {
+	configFolder = '../config',
+	environment = 'development',
+	logsFolder = '../logs',
+}
+
+
 export const APP_DEFAULTS = {
+	environment: process.env.NODE_ENV || Defaults.environment,
 	appName: 'express-app',
 	locals: null,
 	port: process.env.PORT || 3000,

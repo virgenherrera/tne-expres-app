@@ -1,5 +1,5 @@
 import { Exceptions } from '../constant/Exceptions';
-import { TneLogger } from '@tne/nodejs-app';
+import { TneLogger } from '@tne/logger';
 
 export function appThrowable(eItem: string, msgReplacers: any = {}, path: string = null, logger: TneLogger): never {
 	let eItemMsg: string = null;

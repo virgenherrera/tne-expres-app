@@ -14,7 +14,7 @@ describe('@tne/express-app entity/paging', () => {
 		const paging = new Paging(page1);
 
 		expect(paging).to.be.an('object')
-			.that.has.keys('count', 'page', 'prev', 'next');
+			.that.has.keys('count', 'page', 'per_page', 'prev', 'next');
 
 		expect(paging.count).to.be.a('number');
 		expect(paging.page).to.be.a('number');
@@ -35,7 +35,7 @@ describe('@tne/express-app entity/paging', () => {
 		const paging = new Paging(page2);
 
 		expect(paging).to.be.an('object')
-			.that.has.keys('count', 'page', 'prev', 'next');
+			.that.has.keys('count', 'page', 'per_page', 'prev', 'next');
 
 		expect(paging.count).to.be.a('number');
 		expect(paging.page).to.be.a('number');
@@ -59,7 +59,7 @@ describe('@tne/express-app entity/paging', () => {
 		const paging = new Paging(page3);
 
 		expect(paging).to.be.an('object')
-			.that.has.keys('count', 'page', 'prev', 'next');
+			.that.has.keys('count', 'page', 'per_page', 'prev', 'next');
 
 		expect(paging.count).to.be.a('number');
 		expect(paging.page).to.be.a('number');
@@ -80,7 +80,7 @@ describe('@tne/express-app entity/paging', () => {
 		const paging = new Paging(qsArgs);
 
 		expect(paging).to.be.an('object')
-			.that.has.keys('count', 'page', 'prev', 'next');
+			.that.has.keys('count', 'page', 'per_page', 'prev', 'next');
 
 		expect(paging.count).to.be.a('number');
 		expect(paging.page).to.be.a('number');
