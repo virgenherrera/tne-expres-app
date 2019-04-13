@@ -1,4 +1,4 @@
-import * as urlJoin from 'url-join';
+import urlJoin = require('url-join');
 
 export function Config(constructor) {
 	Object.freeze(constructor);
@@ -7,7 +7,7 @@ export function Config(constructor) {
 	return constructor;
 }
 
-export function FinalClass<T extends { new(...args: any[]): object }>(target: T): T {
+export function FinalClass<T extends new (...args: any[]) => object>(target: T): T {
 	return class Final extends target {
 		constructor(...args: any[]) {
 			if (new.target !== Final) {
