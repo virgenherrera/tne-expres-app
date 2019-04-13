@@ -1,7 +1,7 @@
 import { pathExists } from '@tne/common';
 import { Application } from 'express';
 import { join, parse } from 'path';
-import { TneLogger } from '@tne/nodejs-app';
+import { TneLogger } from '@tne/logger';
 import { LogMessages } from '../constant/LogMessages';
 import { appThrowable } from './appThrowable';
 import { Exceptions } from '../constant/Exceptions';

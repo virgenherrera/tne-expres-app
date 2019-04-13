@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { TneLogger } from '@tne/nodejs-app';
+import { TneLogger } from '@tne/logger';
 import { Authorization } from '../entity/authorization';
 import { Pager } from '../entity/pager';
 

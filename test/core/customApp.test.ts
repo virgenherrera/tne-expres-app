@@ -35,6 +35,28 @@ describe('@tne/express-app Interface test', () => {
 		});
 	});
 
+	it('should include buildUrl helper function', (done) => {
+
+		ExpressApplication.construct(appConfigs.baseAppSettings);
+
+		const instance = ExpressApplication.getInstance();
+		expect(instance).to.have.property('buildUrl');
+
+		const uriSegments = ['segmentOne', 'segmentTwo', 'segmentThree'];
+		const builtUrl = instance.buildUrl(...uriSegments);
+
+		expect(builtUrl).to.contain(instance.getConfig('hostname', 'localhost'));
+		expect(builtUrl).to.contain(instance.getConfig('port'));
+
+		uriSegments.forEach((segment, k, arr) => {
+			expect(builtUrl).to.contain(segment);
+
+			if (arr.length === k + 1) {
+				return done();
+			}
+		});
+	});
+
 	it('should create an express app that exposes a public path', (done) => {
 		const { publicPathAppSettings } = appConfigs;
 		ExpressApplication.construct(publicPathAppSettings);
@@ -126,7 +148,7 @@ describe('@tne/express-app Interface test', () => {
 			});
 	});
 
-	it('should throw when tying to create an express app with a bad routesFolder argument', () => {
+	it('should throw when tying to create an express app wxith a bad routesFolder argument', () => {
 		const { routedAppBadRoutesFolder } = appConfigs;
 
 		expect(() => ExpressApplication.construct(routedAppBadRoutesFolder)).to.throw();
@@ -156,7 +178,7 @@ describe('@tne/express-app Interface test', () => {
 			});
 	});
 
-	it('should use default error middleware whe hitting an endpoint that does not exists', (done) => {
+	it('should use default error middleware whe hxitting an endpoint that does not exists', (done) => {
 		const { routedApp } = appConfigs;
 		ExpressApplication.construct(routedApp);
 
@@ -178,5 +200,37 @@ describe('@tne/express-app Interface test', () => {
 
 				done();
 			});
+	});
+
+	it('should getConfig find data from process.env when envVal begins with "$keys."', (done) => {
+		const keys = require('../fixtures/customApp/config/keys.json');
+
+		ExpressApplication.construct(appConfigs.baseAppSettings);
+
+		const instance = ExpressApplication.getInstance();
+		expect(instance).to.have.property('getConfig');
+
+		const { getConfig } = instance;
+		expect(getConfig).to.be.a('function');
+
+		expect(getConfig('database.mongoose.user')).to.be.equal(keys.database.username);
+		expect(getConfig('database.mongoose.pass')).to.be.equal(keys.database.password);
+
+		done();
+	});
+
+	it('should getConfig find data from process.env when envVal begins with "$env."', (done) => {
+		ExpressApplication.construct(appConfigs.baseAppSettings);
+
+		const instance = ExpressApplication.getInstance();
+		expect(instance).to.have.property('getConfig');
+
+		const { getConfig } = instance;
+		expect(getConfig).to.be.a('function');
+
+		expect(getConfig('someConf')).to.be.equal(process.env.NODE_ENV);
+		expect(getConfig('someConf2')).to.be.equal(process.env.PWD);
+
+		done();
 	});
 });

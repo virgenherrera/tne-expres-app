@@ -7,5 +7,7 @@
       "user": "$keys.database.username",
       "pass": "$keys.database.password"
     }
-  }
+  },
+  "someConf": "$env.NODE_ENV",
+  "someConf2": "$env.PWD"
 }

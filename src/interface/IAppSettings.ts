@@ -1,6 +1,6 @@
 import { ErrorRequestHandler, RequestHandler } from 'express';
 import { OptionsUrlencoded, OptionsJson } from 'body-parser';
-import { IAppSettings as INodeAppSettings } from '@tne/nodejs-app';
+import { ISettings } from '@tne/logger';
 import { CorsOptions } from 'cors';
 import { CompressionOptions } from 'compression';
 
@@ -17,7 +17,12 @@ export { CompressionOptions };
 export { OptionsUrlencoded };
 export { OptionsJson };
 
-export interface IAppSettings extends INodeAppSettings {
+export interface IAppSettings {
+	[key: string]: any;
+	appPath: string;
+	environment?: string;
+	appName?: string;
+	logger?: ISettings;
 	hostname?: string;
 	port?: number;
 	locals?: any;
