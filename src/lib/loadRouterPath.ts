@@ -34,7 +34,7 @@ export function loadRouterPath(app: Application, appPath: string, routersFolder:
 				logger.info(LogMessages.setExpAppRoute.replace(':route', name));
 				app.use(router);
 			} else {
-				logger.warn(Exceptions.invalidAppRouterExport.replace(':router', name));
+				logger.warning(Exceptions.invalidAppRouterExport.replace(':router', name));
 			}
 		});
 
