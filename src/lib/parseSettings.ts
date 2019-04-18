@@ -2,7 +2,7 @@ import { join } from 'path';
 import { pathExists, loadJsonFile, toCamelCase } from '@tne/common';
 import { APP_DEFAULTS, Defaults } from '../constant/config';
 import { IAppSettings } from '../interface';
-import { ISettings as ILogSettings, IFileSettings } from '@tne/logger';
+import { ILoggerOpts, IFileSettings } from '@tne/logger';
 import { getConfig } from './getConfig';
 import { Exceptions } from '../constant/Exceptions';
 
@@ -94,7 +94,7 @@ function getJsonFileKeysData(configPath: string): any {
 	}
 }
 
-function setLoggerCfg(settings: IAppSettings): ILogSettings {
+function setLoggerCfg(settings: IAppSettings): ILoggerOpts {
 	const { appPath, appName } = settings;
 
 	let logsPath = getConfig(settings, 'logger.fileCfg.logsPath', '');
@@ -104,13 +104,10 @@ function setLoggerCfg(settings: IAppSettings): ILogSettings {
 	const datePattern = getConfig(settings, 'logger.fileCfg.datePattern');
 
 	const fileCfg: IFileSettings = { logsPath, logFile, datePattern };
-	const logConfig: ILogSettings = { fileCfg };
+	const logConfig: ILoggerOpts = { fileCfg };
 
 	if (settings.logger && settings.logger.format) {
 		logConfig.format = settings.logger.format;
-	}
-	if (settings.logger && settings.logger.level) {
-		logConfig.level = settings.logger.level;
 	}
 	if (settings.logger && settings.logger.customTransports) {
 		logConfig.customTransports = settings.logger.customTransports;

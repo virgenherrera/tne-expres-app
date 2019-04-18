@@ -398,7 +398,6 @@ Used to config the Application logger
 | Param | Type | Required? | Description |
 |-|-|-|-|
 | format | Format | false | valid [winston Format](https://github.com/winstonjs/winston#formats).  |
-| level | string | false | valid [winston logging level](https://github.com/winstonjs/winston#using-custom-logging-levels) defaults to 'debug'. |
 | fileCfg | IFileSettings | false | valid [IFileSettings](#i_file_settings) object. |
 | customTransports | Transport[] | false | array of your own additional [winston Transports](https://github.com/winstonjs/winston#transports) |
 

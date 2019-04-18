@@ -1,6 +1,6 @@
 import { ErrorRequestHandler, RequestHandler } from 'express';
 import { OptionsUrlencoded, OptionsJson } from 'body-parser';
-import { ISettings } from '@tne/logger';
+import { ILoggerOpts } from '@tne/logger';
 import { CorsOptions } from 'cors';
 import { CompressionOptions } from 'compression';
 
@@ -22,7 +22,7 @@ export interface IAppSettings {
 	appPath: string;
 	environment?: string;
 	appName?: string;
-	logger?: ISettings;
+	logger?: ILoggerOpts;
 	hostname?: string;
 	port?: number;
 	locals?: any;

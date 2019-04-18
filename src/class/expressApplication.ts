@@ -12,7 +12,7 @@ export class ExpressApplication extends AppCore {
 		if (_instance === null) {
 			_instance = new ExpressApplication(settings);
 		} else {
-			_instance.logger.warn(Exceptions.instanceRunning);
+			_instance.logger.warning(Exceptions.instanceRunning);
 		}
 
 		return _instance;

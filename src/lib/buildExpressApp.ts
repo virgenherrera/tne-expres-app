@@ -102,7 +102,7 @@ export function setupAppMiddleware(app: appType, getConfig: Function, logger: lo
 		logger.info('- App is using cors custom config');
 		serviceMiddleware.push(cors(corsOptions));
 	} else {
-		logger.warn('- App is not using cors');
+		logger.warning('- App is not using cors');
 	}
 
 	// Enable gzip compression
@@ -113,7 +113,7 @@ export function setupAppMiddleware(app: appType, getConfig: Function, logger: lo
 		logger.info('- App is using compression custom config');
 		serviceMiddleware.push(compression(compressionOptions));
 	} else {
-		logger.warn('- App is not using compression');
+		logger.warning('- App is not using compression');
 	}
 
 	// Accept urlEncoded requests
@@ -124,7 +124,7 @@ export function setupAppMiddleware(app: appType, getConfig: Function, logger: lo
 		logger.info('- App is using express.urlencoded custom config');
 		serviceMiddleware.push(express.urlencoded(urlEncodedOptions));
 	} else {
-		logger.warn('- App is not using express.urlencoded');
+		logger.warning('- App is not using express.urlencoded');
 	}
 
 	// Accept JSON requests
@@ -135,7 +135,7 @@ export function setupAppMiddleware(app: appType, getConfig: Function, logger: lo
 		logger.info('- App is using express.json custom config');
 		serviceMiddleware.push(express.json(jsonOptions));
 	} else {
-		logger.warn('- App is not using express.json');
+		logger.warning('- App is not using express.json');
 	}
 
 	if (appMiddleware.length > 0) {
