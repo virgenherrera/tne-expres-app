@@ -6,7 +6,7 @@ export function prevUrlStringify({ uri, page, per_page, queryStringArgs = {} }: 
 			page: page - 1,
 			per_page: per_page,
 		};
-		const args = Object.assign({}, baseArgs, queryStringArgs);
+		const args = { ...baseArgs, ...queryStringArgs };
 
 		return `${uri}?${stringify(args)}`;
 	} else {
@@ -20,7 +20,7 @@ export function nextUrlStringify({ uri, count, page, per_page, queryStringArgs =
 			page: page + 1,
 			per_page: per_page,
 		};
-		const args = Object.assign({}, baseArgs, queryStringArgs);
+		const args = { ...baseArgs, ...queryStringArgs };
 
 		return `${uri}?${stringify(args)}`;
 	} else {

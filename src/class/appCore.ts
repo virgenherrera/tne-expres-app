@@ -1,15 +1,14 @@
-import { TneLogger } from '@tne/logger';
-import { getConfig } from '../lib/getConfig';
-import { parseSettings } from '../lib/parseSettings';
-import { initLogger } from '../lib/initLogger';
-import { IAppSettings } from '../interface';
-import { URL } from 'url';
-import { concatUri } from '../lib/concatUri';
-import { start as startServer, stop as stopServer } from '../lib/service';
 import { Server as httpServer } from 'http';
 import { Server as httpsServer } from 'https';
+import { URL } from 'url';
+import { TneLogger } from '@tne/logger';
 import { buildExpressApp } from '../lib/buildExpressApp';
-import { appType } from '../interface/types';
+import { concatUri } from '../lib/concatUri';
+import { getConfig } from '../lib/getConfig';
+import { appType, IAppSettings } from '../interface';
+import { initLogger } from '../lib/initLogger';
+import { parseSettings } from '../lib/parseSettings';
+import { start as startServer, stop as stopServer } from '../lib/service';
 
 export class AppCore {
 	private _logger: TneLogger;
